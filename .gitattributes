@@ -1,0 +1,7 @@
+# LF in the repo for everything; CRLF only for PowerShell on checkout.
+* text=auto eol=lf
+*.ps1 text eol=crlf
+*.bin binary
+*.npy binary
+*.npz binary
+*.wasm binary
