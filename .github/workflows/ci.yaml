@@ -1,0 +1,54 @@
+name: ci
+
+# Trunk plus manual only: no pull_request trigger, no schedule, no feature branches. This is a library, so its
+# unit tests are cheap (seconds, numpy only) and run here; tests that need the release files, a GPU or brian2 are
+# marked and skip on the runner, and -rs lists every skip so a skipped gate is never read as a pass.
+on:
+  push:
+    branches: [develop, main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Guards (stdlib only)
+        run: |
+          python scripts/check_content_standards.py
+          python scripts/check_ci_budget.py
+          python scripts/check_sdd.py
+      - name: Install the library and its dev tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Lint
+        run: python -m ruff check .
+      - name: Unit tests
+        run: python -m pytest -rs
+
+  typescript:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install
+        run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Unit tests
+        run: npm test

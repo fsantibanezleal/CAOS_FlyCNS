@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "types": ["@webgpu/types", "node"],
+    "declaration": false,
+    "outDir": "ts-out",
+    "rootDir": "ts"
+  },
+  "include": ["ts/src", "ts/test"]
+}
