@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flycns"
+version = "0.0.0"
+description = "Compile fly connectome releases (MaleCNS v1.0) into simulation-ready graphs with two-eye column maps, and simulate the whole central nervous system (graded optic lobe plus spiking LIF) with parity between Python and the browser."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Felipe Santibanez-Leal", email = "fsantibanez@gmail.com" }]
+keywords = ["connectome", "drosophila", "malecns", "neuroscience", "simulation", "spiking", "leaky-integrate-and-fire", "compound-eye"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Typing :: Typed",
+]
+dependencies = ["numpy>=1.26"]
+
+[project.optional-dependencies]
+# reading release files (feather tables)
+release = ["pyarrow>=15", "pandas>=2.1"]
+# the GPU path of the dynamics
+gpu = ["torch>=2.3"]
+# the literal Brian2 transcription used by the parity tests
+parity = ["brian2>=2.7"]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[project.urls]
+Homepage = "https://github.com/fsantibanezleal/CAOS_FlyCNS"
+Source = "https://github.com/fsantibanezleal/CAOS_FlyCNS"
+Issues = "https://github.com/fsantibanezleal/CAOS_FlyCNS/issues"
+Changelog = "https://github.com/fsantibanezleal/CAOS_FlyCNS/blob/main/CHANGELOG.md"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+flycns = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+    "data: needs the release files on disk (skipped when absent, and reported with -rs)",
+    "gpu: needs a CUDA device",
+    "parity: needs brian2",
+]
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]
