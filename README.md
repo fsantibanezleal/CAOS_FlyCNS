@@ -24,8 +24,8 @@ known to fall short.
 
 ## Status
 
-Version 0.01.001: the MaleCNS v1.0 compiler and the compiled format. The eye model is the next unit; this README lists
-capabilities only as they land.
+Version 0.02.000: the MaleCNS v1.0 compiler, the compiled format, and the two compound eyes over the release's own
+columns. The neuron dynamics are the next unit; this README lists capabilities only as they land.
 
 ## Compile MaleCNS v1.0
 
