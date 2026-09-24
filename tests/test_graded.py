@@ -15,7 +15,7 @@ def small_network(seed: int = 0) -> GradedNetwork:
     n, e, columns = 12, 40, 3
     source = rng.integers(n, size=e)
     target = rng.integers(n, size=e)
-    return GradedNetwork(
+    return GradedNetwork.from_input_index(
         bias=rng.normal(0.5, 0.5, size=n),
         # some time constants below the step, where tau_eff = dt
         time_const_s=np.where(rng.random(n) < 0.3, 0.002, rng.uniform(0.01, 0.2, size=n)),
@@ -32,7 +32,7 @@ def formula(net: GradedNetwork, v: np.ndarray, intensity: np.ndarray) -> np.ndar
     for i in range(net.n):
         synaptic = sum(net.weight[k] * max(v[net.source[k]], 0.0) for k in range(len(net.weight))
                        if net.target[k] == i)
-        x = sum(intensity[c] for row in net.input_index for c, j in enumerate(row) if j == i)
+        x = sum(intensity[c] for j, c in zip(net.input_neuron, net.input_column, strict=True) if j == i)
         tau_eff = max(net.time_const_s[i], DT)
         out[i] = v[i] + DT / tau_eff * (-v[i] + net.bias[i] + synaptic + x)
     return out

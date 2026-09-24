@@ -3,6 +3,41 @@
 All notable changes are recorded here, newest first, grouped Added / Changed / Fixed / Removed. Versions are
 `X.XX.XXX` (the `VERSION` file, the tags and this log); the manifests carry the semantic form (`0.0.0`).
 
+## [0.05.000] - 2026-09-24
+
+### Added
+
+- The MaleCNS optic lobes as graded units (`flycns.optic_lobe.build_optic_lobe`): 95,925 real neurons and their
+  9.07 million connections, with flyvis's trained numbers transferred class by class: flyvis's strength per synapse,
+  each neuron's drive from each presynaptic class capped at flyvis's (without the cap the release's denser lateral
+  wiring diverges within 100 ms), flyvis's initialisation scale for the 69% of synapses flyvis has no number for,
+  CT1 split into flyvis's 3,536 per-column compartments, and 4,873 flagged stand-in photoreceptors where the
+  reconstruction left columns incomplete.
+- Direction selectivity (`flycns.motion`): flyvis's measures, reproducing flyvis's own numbers on its lattice (DSI
+  within 1e-7), and full-field moving edges rendered on the modelled eyes; positions for the neurons the release
+  gives no column (T4, T5, Tm3, T2, TmY), from their inputs' columns.
+- The first measurement across all 50 networks: where flyvis's own T4 subtype is selective with the known direction,
+  the transferred one keeps it on both eyes in 78 of 91 cases (median error 8 to 11 degrees); T5 in 15 of 39. 41 of 50
+  transferred networks stay bounded over 20 s of grey (flyvis's lattice: 49).
+- `flycns.flyvis.lattice_network` (flyvis's own network for any of the 50) and `central_neurons`; a batched GPU run of
+  graded networks through a sparse weight matrix.
+- Scripts: flyvis's own moving-edge experiment recorded (`extract_flyvis_moving_edges.py`), the 50-network
+  measurement and its summary, and the figures of the eyes and of the T4 and T5 directions.
+- Wiki: the transferred optic lobes, rule by rule, with the ensemble's results.
+
+### Changed
+
+- Graded networks take light through (neuron, column) pairs, so a column can hold any number of photoreceptors;
+  `GradedNetwork.from_input_index` keeps flyvis's layout.
+
+### Fixed
+
+- The eye model's vertical was one 60-degree lattice step off in 0.02.000 to 0.04.000: the medulla's dorsal axis was
+  taken as the eye's, but the medulla sits obliquely in the head. The vertical is now set by the dorsal rim (its
+  centroid within 9 degrees of straight up in both eyes, from 47 to 53 degrees off). T4 cells found it: measured
+  through the old eyes they preferred their known directions all turned by about 65 degrees; through the corrected
+  eyes, within about 10. The dorsal-rim requirement now fails a lattice turned that way.
+
 ## [0.04.000] - 2026-09-24
 
 ### Added

@@ -24,12 +24,13 @@ known to fall short.
 
 ## Status
 
-Version 0.04.000: the MaleCNS v1.0 compiler and compiled format; the two compound eyes over the release's own
-columns; the published spiking model on a NumPy reference and a GPU engine, identical to a literal Brian2
-transcription, with counter-based input, null graphs and recordings; and the graded visual neurons as flyvis
-computes them, with the 50 trained flyvis networks shipped as data and the engines held to flyvis itself. Next:
-the graded optic lobe on the MaleCNS wiring and its coupling to the spiking CNS. This README lists capabilities
-only as they land.
+Version 0.05.000: the MaleCNS v1.0 compiler and compiled format; the two compound eyes over the release's own
+columns, their vertical set by the dorsal rim; the published spiking model, identical to a literal Brian2
+transcription, on a NumPy reference and a GPU engine; the graded visual neurons as flyvis computes them, held to
+flyvis itself, with its 50 trained networks shipped as data; and flyvis's numbers transferred onto the neuron-level
+wiring of both MaleCNS optic lobes, where T4 cells, measured through the modelled eyes, prefer their known
+directions. Next: the coupling of the graded optic lobes to the spiking CNS. This README lists capabilities only as
+they land.
 
 ## Compile MaleCNS v1.0
 
