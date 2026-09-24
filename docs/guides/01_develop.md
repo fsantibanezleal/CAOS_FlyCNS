@@ -6,13 +6,24 @@ Python 3.12 is the reference interpreter (3.11 to 3.13 are supported by the pack
 
 ```bash
 python -m venv .venv
-.venv/Scripts/python -m pip install -e ".[dev,release]"    # add ,gpu for the PyTorch path, ,parity for brian2
+.venv/Scripts/python -m pip install -e ".[dev,release,parity]"    # add ,gpu for the PyTorch path
 .venv/Scripts/python -m ruff check .
 .venv/Scripts/python -m pytest -rs
 ```
 
 Tests that need the release files, a CUDA device or brian2 carry the markers `data`, `gpu` and `parity`; they skip
-when their requirement is missing and `-rs` lists every skip, so a skipped gate is never read as a pass.
+when their requirement is missing and `-rs` lists every skip, so a skipped gate is never read as a pass. Continuous
+integration installs `dev`, `release` and `parity`, so the Brian2 transcription of the published model (about 3 s)
+runs on every push to `develop` and `main`.
+
+The whole-graph tests read a compiled MaleCNS (`FLYCNS_MALECNS_COMPILED`, default
+`E:/_Datos/destello/compiled/malecns-v1.0`) and take minutes, not seconds: the GPU engine against the reference runs
+fifteen half-second trials and two short ones on the whole CNS (about 3 minutes), and the exact degree-preserving null
+rewires 25.6 million connections (about 20 s). Run them before every release that touches the dynamics or the nulls:
+
+```bash
+.venv/Scripts/python -m pytest -rs -m "data or gpu"
+```
 
 ## TypeScript
 

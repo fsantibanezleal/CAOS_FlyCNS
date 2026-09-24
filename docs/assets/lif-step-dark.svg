@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400" role="img" aria-labelledby="t d">
+  <title id="t">One step of the published spiking model</title>
+  <desc id="d">The four slots of a 0.1 ms step in Brian2's schedule (groups, thresholds, synapses, resets), and a timeline showing that a neuron which spikes at step k is refractory for 22 steps, during which arriving input is discarded, while its spike reaches its targets 18 steps later.</desc>
+  <style>
+    .bg { fill: #0d1117; }
+    .node { fill: #161b22; stroke: #30363d; stroke-width: 1.5; }
+    .key { fill: #161b22; stroke: #58a6ff; stroke-width: 2; }
+    .h { font: 600 15px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #c9d1d9; }
+    .b { font: 13px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #c9d1d9; }
+    .m { font: 13px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #8b949e; }
+    .title { font: 600 16px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #c9d1d9; }
+    .edge { stroke: #8b949e; stroke-width: 1.5; fill: none; }
+    .accent { stroke: #58a6ff; stroke-width: 2; fill: none; }
+    .axis { stroke: #30363d; stroke-width: 1.5; }
+    .tick { stroke: #30363d; stroke-width: 1; }
+    .band { fill: #f85149; fill-opacity: 0.18; stroke: #f85149; stroke-width: 1; }
+    .spike { stroke: #d29922; stroke-width: 3; }
+    .deliver { stroke: #58a6ff; stroke-width: 3; }
+    .ah { fill: #8b949e; }
+    .ahk { fill: #58a6ff; }
+  </style>
+  <rect class="bg" width="800" height="400"/>
+  <text class="title" x="24" y="34">One step of 0.1 ms, in the order Brian2 runs it</text>
+
+  <rect class="node" x="24" y="56" width="168" height="150" rx="6"/>
+  <text class="h" x="36" y="80">1. groups</text>
+  <text class="b" x="36" y="104">integrate v and g</text>
+  <text class="b" x="36" y="122">exactly (closed form)</text>
+  <text class="b" x="36" y="140">for every neuron that</text>
+  <text class="b" x="36" y="158">is not refractory</text>
+
+  <rect class="node" x="216" y="56" width="168" height="150" rx="6"/>
+  <text class="h" x="228" y="80">2. thresholds</text>
+  <text class="b" x="228" y="104">v above -45 mV and</text>
+  <text class="b" x="228" y="122">not refractory: spike;</text>
+  <text class="b" x="228" y="140">the neuron is</text>
+  <text class="b" x="228" y="158">refractory from now</text>
+
+  <rect class="key" x="408" y="56" width="168" height="150" rx="6"/>
+  <text class="h" x="420" y="80">3. synapses</text>
+  <text class="b" x="420" y="104">spikes of 1.8 ms ago</text>
+  <text class="b" x="420" y="122">add their weights to g;</text>
+  <text class="b" x="420" y="140">Poisson events add</text>
+  <text class="b" x="420" y="158">68.75 mV to v; a</text>
+  <text class="b" x="420" y="176">refractory neuron</text>
+  <text class="b" x="420" y="194">receives nothing</text>
+
+  <rect class="node" x="600" y="56" width="168" height="150" rx="6"/>
+  <text class="h" x="612" y="80">4. resets</text>
+  <text class="b" x="612" y="104">neurons that spiked</text>
+  <text class="b" x="612" y="122">this step:</text>
+  <text class="b" x="612" y="140">v = -52 mV, g = 0</text>
+
+  <line class="edge" x1="192" y1="131" x2="208" y2="131"/>
+  <polygon class="ah" points="216,131 207,126 207,136"/>
+  <line class="edge" x1="384" y1="131" x2="400" y2="131"/>
+  <polygon class="ah" points="408,131 399,126 399,136"/>
+  <line class="edge" x1="576" y1="131" x2="592" y2="131"/>
+  <polygon class="ah" points="600,131 591,126 591,136"/>
+
+  <text class="m" x="24" y="244">the neuron that spikes at step k</text>
+  <line class="axis" x1="108" y1="276" x2="776" y2="276"/>
+  <rect class="band" x="108" y="262" width="535" height="28"/>
+  <line class="spike" x1="108" y1="252" x2="108" y2="300"/>
+  <text class="b" x="98" y="281" text-anchor="end">spike at k</text>
+  <text class="b" x="300" y="316">refractory for 22 steps (2.2 ms): arriving input is discarded</text>
+
+  <text class="m" x="24" y="342">its targets</text>
+  <line class="axis" x1="24" y1="366" x2="776" y2="366"/>
+  <line class="deliver" x1="546" y1="352" x2="546" y2="380"/>
+  <line class="accent" x1="108" y1="300" x2="540" y2="360"/>
+  <polygon class="ahk" points="546,362 535,354 533,364"/>
+  <text class="b" x="556" y="392">the spike arrives at k + 18 (1.8 ms)</text>
+</svg>
