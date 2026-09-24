@@ -3,6 +3,21 @@
 All notable changes are recorded here, newest first, grouped Added / Changed / Fixed / Removed. Versions are
 `X.XX.XXX` (the `VERSION` file, the tags and this log); the manifests carry the semantic form (`0.0.0`).
 
+## [0.02.000] - 2026-09-24
+
+### Added
+
+- The two compound eyes (`flycns.eyes`): the lattice's orientation measured on the release (medulla column centres
+  from the per-synapse column labels, body axes from landmark neuropils, neighbour offsets from 3D distance); the
+  anterior-posterior mirror of the first optic chiasm; an ideal hexagonal lattice placed on the sphere and scaled to
+  the eye's measured extent (10 degrees into the opposite hemisphere to 155 degrees behind, Zhao et al. 2025); an
+  acceptance-weighted sampler of equirectangular panoramas (Gaussian, 8.23 degrees full width at half maximum,
+  Gonzalez-Bellido et al. 2011).
+- Tests on a synthetic lattice of known orientation (axes, neighbours, chiasm, extent, spacing, mirror symmetry,
+  sampling normalisation, a bright spot) and on the real release (879 and 892 columns; dorsal-rim columns above the
+  colour columns in both eyes, an independent check of the vertical orientation).
+- Wiki: the eye model with its equations, sources, measured numbers and limits.
+
 ## [0.01.001] - 2026-09-23
 
 ### Fixed
