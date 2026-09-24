@@ -14,6 +14,7 @@ import pytest
 
 from flycns.compiled import read_compiled
 from flycns.eyes import EQUATOR_FRONT_DEG, build_eyes
+from flycns.motion import eye_centre, local_frame
 
 COMPILED = Path(os.environ.get("FLYCNS_MALECNS_COMPILED", "E:/_Datos/destello/compiled/malecns-v1.0"))
 GEOMETRY = Path(str(COMPILED) + "-eyes-geometry.json")
@@ -34,6 +35,12 @@ def test_malecns_eyes_match_the_release_and_the_measured_extent():
         names = kinds[eye.kinds]
         rim = eye.elevation_deg[names == "dorsal_rim"].mean()
         colour = eye.elevation_deg[(names == "pale") | (names == "yellow")].mean()
-        assert rim > colour + 10.0
+        assert rim > colour + 40.0
+        centre = eye_centre(eye.azimuth_deg, eye.elevation_deg)
+        x, y = local_frame(eye.azimuth_deg, eye.elevation_deg, *centre)
+        on_rim = names == "dorsal_rim"
+        bearing = np.degrees(np.arctan2(y[on_rim].mean(), x[on_rim].mean()))
+        assert abs(bearing - 90.0) < 20.0
+        assert eye.orientation["rotation_deg"] % 60 == 0
         assert eye.azimuth_deg.min() <= EQUATOR_FRONT_DEG
         assert 4.0 < eye.delta_phi_deg < 7.0      # the literature's inter-ommatidial angles lie in this range

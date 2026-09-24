@@ -15,6 +15,7 @@ from pathlib import Path
 import numpy as np
 
 from .compiled import Compiled, read_compiled
+from .dynamics.graded import GradedNetwork
 
 ENSEMBLE = "flyvis-1.2.0-ensemble"
 
@@ -69,3 +70,32 @@ def load_ensemble(directory: Path | None = None) -> FlyvisEnsemble:
         strength=c["strength"],
         manifest=c.manifest,
     )
+
+
+def lattice_network(lattice: Compiled, ensemble: FlyvisEnsemble, model: int) -> GradedNetwork:
+    """flyvis's own network (the 721-column lattice extracted by ``scripts/extract_flyvis_ensemble.py``) with the
+    parameters of any of the 50 networks: weight = sign x mean count at the offset x strength, where flyvis's
+    offsets run from the presynaptic to the postsynaptic column."""
+    u, v = lattice["node_u"].astype(np.int64), lattice["node_v"].astype(np.int64)
+    source, target = lattice["edge_source"].astype(np.int64), lattice["edge_target"].astype(np.int64)
+    pair = lattice["edge_pair"].astype(np.int64)
+    width = 64
+    key_of_group = (ensemble.group_pair * width + (ensemble.group_du + width // 2)) * width         + (ensemble.group_dv + width // 2)
+    order = np.argsort(key_of_group)
+    key = (pair * width + (u[target] - u[source] + width // 2)) * width + (v[target] - v[source] + width // 2)
+    group = order[np.searchsorted(key_of_group[order], key)]
+    if not np.array_equal(key_of_group[group], key):
+        raise ValueError("an edge of the lattice has no synapse-count group in the ensemble")
+    weight = ensemble.pair_sign[pair] * ensemble.group_n_syn[group] * ensemble.strength[model][pair]
+    types = lattice["node_type"].astype(np.int64)
+    return GradedNetwork.from_input_index(bias=ensemble.bias[model][types],
+                                          time_const_s=ensemble.time_const_s[model][types],
+                                          source=source, target=target, weight=weight,
+                                          input_index=lattice["input_index"])
+
+
+def central_neurons(lattice: Compiled) -> np.ndarray:
+    """The neuron of each of the 65 types at the central column (u = v = 0), in type order."""
+    u, v, types = lattice["node_u"], lattice["node_v"], lattice["node_type"].astype(np.int64)
+    centre = np.flatnonzero((u == 0) & (v == 0))
+    return centre[np.argsort(types[centre])]

@@ -10,7 +10,8 @@ that light entering the model eye reaches the real neurons of the right column.
 |---|---|---|
 | The columns of each eye: 879 left, 892 right, with their two hexagonal coordinates | the MaleCNS annotations | real |
 | The photoreceptors and lamina neurons of each column; pale, yellow and dorsal-rim columns | compiled from the release's connectivity | real, derived |
-| How the lattice lies in the animal: which hex axis runs dorsal, which anterior, which offsets are neighbours | measured on the release (below) | real, derived |
+| Which offsets are neighbours, and the lattice's handedness (the chiasm) | measured on the release (below) | real, derived |
+| Which lattice direction is vertical in the eye | set by the dorsal rim, confirmed by T4 motion tuning (below) | real, derived |
 | Each column's viewing direction | a model, scaled to the eye's measured extent | modelled, stated |
 | Each ommatidium's acceptance | a Gaussian with the measured dark-adapted width | modelled from a measurement |
 
@@ -38,12 +39,35 @@ $(\pm1, 0)$, $(0, \pm1)$ and $\pm(1, 1)$ in both eyes.
 anterior-posterior order of columns is mirrored, the dorsal-ventral order kept. So the hex axis that runs posterior in
 the medulla belongs to ommatidia that look further **forward**.
 
-**The ideal lattice.** In the eye the lattice is taken regular. The dorsal axis $h_2$ is the vertical neighbour
-direction; because $(1, 1)$ is a neighbour offset, the other axis sits 120 degrees from it, so the sum of the two is
-also one step:
+**The ideal lattice.** In the eye the lattice is taken regular. Because $(1, 1)$ is a neighbour offset, the two
+axes sit 120 degrees apart, so their sum is also one step. Laid out first with $h_2$ vertical,
 
-$$\mathbf{p}(h_1, h_2) = h_1 \begin{pmatrix} \cos 30^\circ \\ -\sin 30^\circ \end{pmatrix} + h_2 \begin{pmatrix} 0 \\ 1 \end{pmatrix}
+$$\mathbf{p}_0(h_1, h_2) = h_1 \begin{pmatrix} \cos 30^\circ \\ -\sin 30^\circ \end{pmatrix} + h_2 \begin{pmatrix} 0 \\ 1 \end{pmatrix}
 \quad\text{(forward, up), in steps.}$$
+
+**Which direction is vertical.** The medulla sits obliquely in the head, so the axis that runs dorsally in the
+medulla ($h_2$) need not run vertically in the eye, and it does not. The dorsal rim settles it: its columns, known
+from their photoreceptor subtypes and not from geometry, form the band along the top edge of the eye. The lattice is
+turned by the multiple of 60 degrees that puts the rim's centroid straight above the eye's centre,
+$\mathbf{p} = R(k \cdot 60^\circ)\,\mathbf{p}_0$. A turn by a multiple of 60 degrees maps the ideal lattice onto
+itself, so only the choice of the vertical direction changes, and the chiasm's handedness is kept. On MaleCNS v1.0
+the rim's centroid sits at a bearing of 42 degrees (left eye) and 37 degrees (right) from the forward axis with $h_2$
+vertical, and at 102 and 97 degrees after a turn of 60 degrees in both eyes: the vertical direction of the eye is the
+diagonal $(1, 1)$, not $h_2$.
+
+Versions 0.02.000 to 0.04.000 kept $h_2$ vertical, and their dorsal-rim check (the rim above the colour columns on
+average) passed anyway, because a lattice turned by 60 degrees still leaves the rim high. The error surfaced when
+T4 cells, measured on the real wiring through these eyes, preferred the four known directions all turned by about
++65 degrees in both eyes; after the correction they prefer them within about 10 degrees
+([`04_optic_lobe.md`](04_optic_lobe.md)). The rim alone sets the turn; T4 is an independent confirmation, not an
+input.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../assets/eyes-orientation-dark.svg">
+  <img alt="The 892 columns of the right eye at their modelled azimuth and elevation. With the medulla's dorsal axis vertical, the dorsal-rim columns run down the front edge of the eye; turned by 60 degrees, they arch along its top edge, with the pale and yellow columns filling the middle." src="../assets/eyes-orientation-light.svg" width="800">
+</picture>
+
+The figure is drawn from the model by `scripts/figures/eyes_figure.py`.
 
 **Placement on the sphere.** The equator is the median row (as many columns above as below; an assumption). The
 columns within half a step of the equator span, in the measurements of Zhao et al. (*Nature* 646:135-142, 2025,
@@ -64,18 +88,18 @@ measurement.
 | Quantity | Left | Right |
 |---|---|---|
 | Columns | 879 | 892 |
-| Implied inter-ommatidial angle $\Delta\varphi$ | 5.60 deg | 5.60 deg |
-| Neighbour spacing, median (5th to 95th percentile) | 5.29 deg (4.08 to 5.60) | 5.28 deg (4.07 to 5.60) |
-| Farthest look past the midline (off the equator) | 14.8 deg | 17.1 deg |
-| Dorsal-rim columns, mean elevation | 40.4 deg | 34.4 deg |
-| Pale and yellow columns, mean elevation | 10 to 12 deg | 12 to 16 deg |
+| Implied inter-ommatidial angle $\Delta\varphi$ | 5.60 deg | 5.44 deg |
+| Neighbour spacing, median (5th to 95th percentile) | 5.29 deg (4.13 to 5.60) | 5.15 deg (4.05 to 5.44) |
+| Farthest look past the midline, any column | 33.7 deg | 24.5 deg |
+| Dorsal-rim columns: mean elevation; bearing of their centroid from the centre (90: straight up) | 63.5 deg; 81 deg | 59.3 deg; 86 deg |
+| Pale and yellow columns, mean elevation | -2.9 deg | 2.6 deg |
 
-The implied $\Delta\varphi$ of 5.6 degrees is close to the smallest measured inter-ommatidial angle of the
+The implied $\Delta\varphi$ of 5.4 to 5.6 degrees is close to the smallest measured inter-ommatidial angle of the
 Drosophila eye, 4.5 degrees in its lateral part (Gonzalez-Bellido, Wardill and Juusola, *PNAS* 108:4224, 2011,
 doi:[10.1073/pnas.1014438108](https://doi.org/10.1073/pnas.1014438108)). The dorsal-rim columns, identified only from
-their photoreceptor subtypes, sit well above the colour columns in both eyes: an independent check that the vertical
-orientation is right. Some dorsal-rim labels reach low elevations (a few columns in each eye), consistent with a small
-number of misassigned R7d/R8d terminals in a sparsely reconstructed retina.
+their photoreceptor subtypes, sit about 60 degrees above the colour columns, which lie on the equator. Off the
+equator the eyes look further past the midline in front than the less than 20 degrees of binocular overlap Zhao et
+al. measured: the equidistant placement stretches the frontal edge, which the model states and does not correct.
 
 ## Sampling a scene
 
