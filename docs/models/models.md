@@ -10,3 +10,5 @@ model gives on MaleCNS v1.0.
    the engines held to flyvis itself.
 4. [`04_optic_lobe.md`](04_optic_lobe.md): flyvis's numbers on the MaleCNS optic lobes, rule by rule, and what the
    real wiring then computes: T4 and T5 direction selectivity through the modelled eyes, across all 50 networks.
+5. [`05_whole_cns.md`](05_whole_cns.md): the whole CNS coupled, engines E1 to E4: the bridge and the feedback, a
+   flash through each engine, and what the stabilisers do.

@@ -54,3 +54,45 @@ R-415  WHERE the compiled MaleCNS and a GPU are present, THE T4 cells of the tra
        preferred direction on each eye within 30 degrees of the known one.
        Gate: tests/test_optic_lobe_data.py::test_t4_on_the_real_wiring_prefers_the_known_directions
 ```
+
+## Part 3: the whole CNS coupled, engines E1 to E4 (0.06.000)
+
+```
+R-421  THE bridge SHALL drive a spiking target from a graded source's release above grey exactly as a spike train of
+       rate beta times that deviation would (its voltage settling where the exact step puts it), SHALL carry nothing
+       at grey, and the feedback SHALL shift a graded target by the class's initial drive times the filtered rate
+       over beta.
+       Gate: tests/test_hybrid.py::test_the_bridge_and_the_feedback_have_their_closed_forms
+
+R-422  THE PyTorch hybrid SHALL give the reference's spikes and, to 1e-4, its graded activity on a small CNS.
+       Gate: tests/test_hybrid.py::test_the_torch_hybrid_matches_the_reference
+
+R-423  THE stabilisers SHALL do what they state: adaptation off is the published model spike for spike and on lowers
+       the rate of driven neurons; modulated Poisson input at a constant rate is the published activation event for
+       event, and a zero rate gives no event.
+       Gate: tests/test_stabilisers.py::test_stabilisers_do_what_they_state
+
+R-424  THE stabilised weights SHALL cap each connection, damp same-type connections and normalise large fan-in in
+       the stated order.
+       Gate: tests/test_stabilisers.py::test_stabilised_weights_cap_damp_and_normalise
+
+R-425  THE lattice geometry of E3 SHALL round-trip every column of flyvis's lattice and mirror flyvis's frame into
+       the eyes' frame so that flyvis's own T4a prefers front-to-back motion there.
+       Gate: tests/test_mapped.py::test_flyvis_t4a_prefers_front_to_back_in_the_eyes_frame
+
+R-426  WHERE the compiled MaleCNS and a GPU are present, E2 SHALL leave the whole spiking CNS silent at grey and carry
+       a full-field flash to visual projection, central-brain, descending and nerve-cord motor neurons.
+       Gate: tests/test_whole_cns_data.py::test_e2_carries_light_from_the_eyes_to_the_motor_neurons
+
+R-427  E1 (the published model everywhere, light as Poisson input to photoreceptors) SHALL show its documented
+       failure: the photoreceptors fire and no other neuron does.
+       Gate: tests/test_whole_cns_data.py::test_e1_photoreceptors_fire_and_the_spiking_lamina_passes_nothing
+
+R-428  E3 SHALL map more than 70,000 MaleCNS units onto flyvis's lattices and carry a flash to the visual projection
+       and motor neurons, silent at grey.
+       Gate: tests/test_whole_cns_data.py::test_e3_carries_flyvis_activity_to_the_central_brain
+
+R-429  E4's stabilisers SHALL leave the published model one state under the strong gustatory drive: ten seeds'
+       spike totals within 5% of each other, where the published model's spread by more than half.
+       Gate: tests/test_whole_cns_data.py::test_e4_stabilisers_leave_the_published_model_one_state
+```

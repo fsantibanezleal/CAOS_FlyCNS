@@ -38,6 +38,10 @@ class LIFParams:
     w_syn_mv: float = 0.275     # weight per synapse, the model's single free parameter
     f_poi: float = 250.0        # Poisson input scaling: one event crosses threshold
     dt_ms: float = 0.1          # Brian2's default step
+    # E4's spike-frequency adaptation (off in the published model): each spike lowers the neuron's effective rest by
+    # adaptation_mv, which decays with tau_adaptation_ms (1.5 mV and 200 ms in flyverse's stabilised model)
+    adaptation_mv: float = 0.0
+    tau_adaptation_ms: float = 200.0
 
     @property
     def delay_steps(self) -> int:
@@ -66,6 +70,9 @@ class Drive:
     activate: dict[int, float] = field(default_factory=dict)          # neuron -> rate (Hz)
     events: dict[int, tuple[np.ndarray, np.ndarray]] = field(default_factory=dict)  # step -> (neurons, dv mV)
     silenced: np.ndarray = field(default_factory=lambda: np.zeros(0, dtype=np.int64))
+    # Poisson input whose rate changes over time (light on photoreceptors): neurons, rates (frames x neurons, Hz),
+    # and the steps each frame lasts. Like activated neurons, these have no refractory period.
+    modulated: tuple[np.ndarray, np.ndarray, int] | None = None
 
 
 @dataclass
@@ -105,8 +112,47 @@ def synaptic_weights(indptr: np.ndarray, indices: np.ndarray, counts: np.ndarray
     return weights
 
 
+def _modulated(drive: Drive, p: LIFParams) -> tuple[np.ndarray, np.ndarray, int]:
+    """The modulated Poisson input as (neurons, uint64 thresholds per frame, steps per frame)."""
+    if drive.modulated is None:
+        return np.zeros(0, dtype=np.int64), np.zeros((1, 0), dtype=np.uint64), 1
+    neurons, rates, steps = drive.modulated
+    rates = np.asarray(rates, dtype=np.float64)
+    p_event = np.clip(rates * p.dt_ms / 1000.0, 0.0, 1.0)
+    thresholds = np.minimum(np.floor(p_event * 2**32), 2**32 - 1).astype(np.uint64)
+    return np.asarray(neurons, dtype=np.int64), thresholds, int(steps)
+
+
+def stabilised_weights(indptr: np.ndarray, indices: np.ndarray, counts: np.ndarray, signs: np.ndarray,
+                       types: np.ndarray, w_syn_mv: float, cap: float = 60.0, same_type_factor: float = 0.1,
+                       fan_in_limit: float = 5000.0) -> np.ndarray:
+    """E4's weights, flyverse's stabilisers in a stated order: each connection's count capped at ``cap``
+    synapse-equivalents; connections between neurons of the same type scaled by ``same_type_factor``; then every
+    neuron whose input so obtained exceeds ``fan_in_limit`` synapse-equivalents has all its inputs scaled down to the
+    limit. Returns the per-connection weight in mV, signed by the presynaptic neuron."""
+    rows = np.repeat(np.arange(len(indptr) - 1), np.diff(indptr))
+    equivalents = np.minimum(np.asarray(counts, dtype=np.float64), cap)
+    same = np.asarray(types)[rows] == np.asarray(types)[indices]
+    equivalents = np.where(same, equivalents * same_type_factor, equivalents)
+    fan_in = np.bincount(indices, weights=equivalents, minlength=len(indptr) - 1)
+    scale = np.where(fan_in > fan_in_limit, fan_in_limit / np.maximum(fan_in, 1e-12), 1.0)
+    return np.asarray(signs, dtype=np.float64)[rows] * equivalents * scale[indices] * w_syn_mv
+
+
+class LIFState:
+    """Everything a run carries from one step to the next; ``k`` is the next step to take."""
+
+    def __init__(self, **fields):
+        self.__dict__.update(fields)
+
+
 class LIFReference:
-    """The NumPy reference engine: float64 state, deliveries accumulated in a fixed order."""
+    """The NumPy reference engine: float64 state, deliveries accumulated in a fixed order.
+
+    ``run`` takes a whole run; ``start``, ``advance`` and ``finish`` take it one step at a time, with an optional extra
+    input to ``g`` per step (the hybrid's graded drive), applied in the synapses slot to neurons that are not
+    refractory, like any synaptic input.
+    """
 
     def __init__(self, indptr: np.ndarray, indices: np.ndarray, weights_mv: np.ndarray,
                  params: LIFParams | None = None):
@@ -126,61 +172,89 @@ class LIFReference:
         offsets = np.repeat(starts - np.r_[0, np.cumsum(lengths)[:-1]], lengths) + np.arange(lengths.sum())
         return np.bincount(self.indices[offsets], weights=self.weights[offsets], minlength=self.n)
 
-    def run(self, steps: int, drive: Drive | None = None, seed: int = 0,
-            trace_neurons: np.ndarray | None = None) -> Run:
+    def start(self, drive: Drive | None = None, seed: int = 0, trace_neurons: np.ndarray | None = None) -> LIFState:
         p = self.params
         drive = drive or Drive()
-        a, b, c = p.decay()
-        v = np.full(self.n, p.v0_mv)
-        g = np.zeros(self.n)
-        last = np.full(self.n, -(10**9), dtype=np.int64)
-        refractory = np.full(self.n, p.refractory_steps, dtype=np.int64)
         act = np.array(sorted(drive.activate), dtype=np.int64)
-        thresholds = np.array([event_threshold(drive.activate[i], p.dt_ms / 1000.0) for i in act], dtype=np.uint64)
+        refractory = np.full(self.n, p.refractory_steps, dtype=np.int64)
         refractory[act] = 0                                     # activated neurons have no refractory period
+        mod_neurons, mod_thresholds, mod_steps = _modulated(drive, p)
+        refractory[mod_neurons] = 0
         mute = np.zeros(self.n, dtype=bool)
         mute[np.asarray(drive.silenced, dtype=np.int64)] = True
-        w_poi = p.w_syn_mv * p.f_poi
-        pending: deque[np.ndarray] = deque([np.zeros(0, dtype=np.int64)] * p.delay_steps)
-        trace_neurons = np.zeros(0, dtype=np.int64) if trace_neurons is None else np.asarray(trace_neurons)
-        traces = np.zeros((steps, len(trace_neurons)), dtype=np.float32)
-        tick_indptr = np.zeros(steps + 1, dtype=np.int64)
-        spikes_out = []
-        for k in range(steps):
-            # 1. groups
-            free = (k - last) >= refractory
-            v_new = p.v0_mv + (v - p.v0_mv) * a + g * c
-            v = np.where(free, v_new, v)
-            g = np.where(free, g * b, g)
-            # 2. thresholds (a neuron that spikes is refractory from this step on)
-            spike = np.flatnonzero(free & (v > p.v_th_mv))
-            last[spike] = k
-            free[spike] = False
-            # 3. synapses: delayed deliveries into g, events into v. Both variables are 'unless refractory' in the
-            # published model, and Brian2 then applies synaptic updates only to postsynaptic neurons that are not
-            # refractory: input arriving during the refractory period is discarded.
-            pending.append(spike[~mute[spike]])                 # a silenced neuron's spikes reach no one
-            g += self._deliver(pending.popleft()) * free
-            if len(act):
-                hit = hash3(seed, act, k) < thresholds
-                targets = act[hit]
-                v[targets[free[targets]]] += w_poi
-            if k in drive.events:
-                neurons, dv = drive.events[k]
-                neurons = np.asarray(neurons, dtype=np.int64)
-                dv = np.asarray(dv, dtype=np.float64)
-                keep = free[neurons]
-                np.add.at(v, neurons[keep], dv[keep])
-            # 4. resets
-            v[spike] = p.v_rst_mv
-            g[spike] = 0.0
-            spikes_out.append(spike)
-            tick_indptr[k + 1] = tick_indptr[k] + len(spike)
-            if len(trace_neurons):
-                traces[k] = v[trace_neurons]
-        neuron_index = np.concatenate(spikes_out) if spikes_out else np.zeros(0, dtype=np.int64)
-        return Run(self.n, steps, p.dt_ms, tick_indptr, neuron_index.astype(np.int32), trace_neurons.astype(np.int32),
-                   traces)
+        return LIFState(mod_neurons=mod_neurons, mod_thresholds=mod_thresholds, mod_steps=mod_steps,
+                        adaptation=np.zeros(self.n),
+            k=0, v=np.full(self.n, p.v0_mv), g=np.zeros(self.n), last=np.full(self.n, -(10**9), dtype=np.int64),
+            refractory=refractory, act=act, mute=mute, drive=drive, seed=seed,
+            thresholds=np.array([event_threshold(drive.activate[i], p.dt_ms / 1000.0) for i in act],
+                                dtype=np.uint64),
+            pending=deque([np.zeros(0, dtype=np.int64)] * p.delay_steps),
+            trace_neurons=np.zeros(0, dtype=np.int64) if trace_neurons is None else np.asarray(trace_neurons),
+            traces=[], spikes=[])
+
+    def advance(self, s: LIFState, g_input: np.ndarray | None = None) -> np.ndarray:
+        """One step; returns the neurons that spiked."""
+        p = self.params
+        a, b, c = p.decay()
+        k = s.k
+        # 1. groups (with adaptation, the effective rest is v0 minus the adaptation, held over the step)
+        free = (k - s.last) >= s.refractory
+        rest = p.v0_mv - s.adaptation if p.adaptation_mv else p.v0_mv
+        v_new = rest + (s.v - rest) * a + s.g * c
+        s.v = np.where(free, v_new, s.v)
+        s.g = np.where(free, s.g * b, s.g)
+        # 2. thresholds (a neuron that spikes is refractory from this step on)
+        spike = np.flatnonzero(free & (s.v > p.v_th_mv))
+        s.last[spike] = k
+        free[spike] = False
+        # 3. synapses: delayed deliveries into g, events into v. Both variables are 'unless refractory' in the
+        # published model, and Brian2 then applies synaptic updates only to postsynaptic neurons that are not
+        # refractory: input arriving during the refractory period is discarded.
+        s.pending.append(spike[~s.mute[spike]])                 # a silenced neuron's spikes reach no one
+        s.g += self._deliver(s.pending.popleft()) * free
+        if g_input is not None:
+            s.g += np.asarray(g_input, dtype=np.float64) * free
+        if len(s.act):
+            hit = hash3(s.seed, s.act, k) < s.thresholds
+            targets = s.act[hit]
+            s.v[targets[free[targets]]] += p.w_syn_mv * p.f_poi
+        if len(s.mod_neurons):
+            frame = min(k // s.mod_steps, len(s.mod_thresholds) - 1)
+            hit = hash3(s.seed, s.mod_neurons, k) < s.mod_thresholds[frame]
+            targets = s.mod_neurons[hit]
+            s.v[targets[free[targets]]] += p.w_syn_mv * p.f_poi
+        if k in s.drive.events:
+            neurons, dv = s.drive.events[k]
+            neurons = np.asarray(neurons, dtype=np.int64)
+            dv = np.asarray(dv, dtype=np.float64)
+            keep = free[neurons]
+            np.add.at(s.v, neurons[keep], dv[keep])
+        # 4. resets
+        s.v[spike] = p.v_rst_mv
+        s.g[spike] = 0.0
+        if p.adaptation_mv:
+            s.adaptation *= math.exp(-p.dt_ms / p.tau_adaptation_ms)
+            s.adaptation[spike] += p.adaptation_mv
+        s.spikes.append(spike)
+        if len(s.trace_neurons):
+            s.traces.append(s.v[s.trace_neurons].astype(np.float32))
+        s.k = k + 1
+        return spike
+
+    def finish(self, s: LIFState) -> Run:
+        counts = np.array([len(x) for x in s.spikes], dtype=np.int64)
+        tick_indptr = np.r_[0, np.cumsum(counts)].astype(np.int64)
+        neuron_index = np.concatenate(s.spikes) if s.spikes else np.zeros(0, dtype=np.int64)
+        traces = (np.stack(s.traces) if s.traces else np.zeros((s.k, len(s.trace_neurons)), dtype=np.float32))
+        return Run(self.n, s.k, self.params.dt_ms, tick_indptr, neuron_index.astype(np.int32),
+                   s.trace_neurons.astype(np.int32), traces)
+
+    def run(self, steps: int, drive: Drive | None = None, seed: int = 0,
+            trace_neurons: np.ndarray | None = None) -> Run:
+        s = self.start(drive, seed, trace_neurons)
+        for _ in range(steps):
+            self.advance(s)
+        return self.finish(s)
 
 
 class LIFTorch:
@@ -213,60 +287,105 @@ class LIFTorch:
         out.index_add_(0, self.indices[offsets], self.weights[offsets])
         return out
 
-    def run(self, steps: int, drive: Drive | None = None, seed: int = 0,
-            trace_neurons: np.ndarray | None = None) -> Run:
+    def start(self, drive: Drive | None = None, seed: int = 0, trace_neurons: np.ndarray | None = None) -> LIFState:
         torch = self.torch
         p = self.params
         drive = drive or Drive()
-        a, b, c = p.decay()
         dev = self.device
-        v = torch.full((self.n,), p.v0_mv, device=dev)
-        g = torch.zeros(self.n, device=dev)
-        last = torch.full((self.n,), -(10**9), dtype=torch.int64, device=dev)
-        refractory = torch.full((self.n,), p.refractory_steps, dtype=torch.int64, device=dev)
         act_np = np.array(sorted(drive.activate), dtype=np.int64)
-        thresholds = np.array([event_threshold(drive.activate[i], p.dt_ms / 1000.0) for i in act_np], dtype=np.uint64)
         act = torch.as_tensor(act_np, device=dev)
+        refractory = torch.full((self.n,), p.refractory_steps, dtype=torch.int64, device=dev)
         if len(act_np):
             refractory[act] = 0
+        mod_np, mod_thresholds, mod_steps = _modulated(drive, p)
+        if len(mod_np):
+            refractory[torch.as_tensor(mod_np, device=dev)] = 0
         mute = torch.zeros(self.n, dtype=torch.bool, device=dev)
         if len(drive.silenced):
             mute[torch.as_tensor(np.asarray(drive.silenced, dtype=np.int64), device=dev)] = True
-        w_poi = p.w_syn_mv * p.f_poi
-        empty = torch.zeros(0, dtype=torch.int64, device=dev)
-        pending = deque([empty] * p.delay_steps)
         trace_np = np.zeros(0, dtype=np.int64) if trace_neurons is None else np.asarray(trace_neurons)
-        trace_t = torch.as_tensor(trace_np, device=dev)
-        traces = torch.zeros((steps, len(trace_np)), device=dev)
-        spikes_out = []
-        for k in range(steps):
-            free = (k - last) >= refractory
-            v = torch.where(free, p.v0_mv + (v - p.v0_mv) * a + g * c, v)
-            g = torch.where(free, g * b, g)
-            spike = torch.nonzero(free & (v > p.v_th_mv)).flatten()
-            last[spike] = k
-            free[spike] = False
-            pending.append(spike[~mute[spike]])
-            g = g + self._deliver(pending.popleft()) * free       # refractory neurons discard input (see above)
-            if len(act_np):
-                hit = hash3(seed, act_np, k) < thresholds       # the same counter-based events as the reference
-                if hit.any():
-                    targets = act[torch.as_tensor(np.flatnonzero(hit), device=dev)]
-                    targets = targets[free[targets]]
-                    v[targets] += w_poi
-            if k in drive.events:
-                neurons, dv = drive.events[k]
-                neurons_t = torch.as_tensor(np.asarray(neurons, dtype=np.int64), device=dev)
-                dv_t = torch.as_tensor(np.asarray(dv, dtype=np.float32), device=dev)
-                keep = free[neurons_t]
-                v.index_add_(0, neurons_t[keep], dv_t[keep])
-            v[spike] = p.v_rst_mv
-            g[spike] = 0.0
-            spikes_out.append(spike)
-            if len(trace_np):
-                traces[k] = v[trace_t]
-        counts = np.array([s.numel() for s in spikes_out], dtype=np.int64)
-        tick_indptr = np.r_[0, np.cumsum(counts)]
-        neuron_index = torch.cat(spikes_out).cpu().numpy() if len(spikes_out) else np.zeros(0)
-        return Run(self.n, steps, p.dt_ms, tick_indptr, neuron_index.astype(np.int32), trace_np.astype(np.int32),
-                   traces.cpu().numpy().astype(np.float32))
+        empty = torch.zeros(0, dtype=torch.int64, device=dev)
+        return LIFState(
+            mod_np=mod_np, mod_t=torch.as_tensor(mod_np, device=dev), mod_thresholds=mod_thresholds,
+            mod_steps=mod_steps, adaptation=torch.zeros(self.n, device=dev),
+            k=0, v=torch.full((self.n,), p.v0_mv, device=dev), g=torch.zeros(self.n, device=dev),
+            last=torch.full((self.n,), -(10**9), dtype=torch.int64, device=dev), refractory=refractory,
+            act_np=act_np, act=act, mute=mute, drive=drive, seed=seed,
+            thresholds=np.array([event_threshold(drive.activate[i], p.dt_ms / 1000.0) for i in act_np],
+                                dtype=np.uint64),
+            pending=deque([empty] * p.delay_steps), trace_np=trace_np,
+            trace_t=torch.as_tensor(trace_np, device=dev), traces=[], spikes=[])
+
+    def advance(self, s: LIFState, g_input=None):
+        torch = self.torch
+        p = self.params
+        a, b, c = p.decay()
+        dev = self.device
+        k = s.k
+        free = (k - s.last) >= s.refractory
+        rest = p.v0_mv - s.adaptation if p.adaptation_mv else p.v0_mv
+        s.v = torch.where(free, rest + (s.v - rest) * a + s.g * c, s.v)
+        s.g = torch.where(free, s.g * b, s.g)
+        spike = torch.nonzero(free & (s.v > p.v_th_mv)).flatten()
+        s.last[spike] = k
+        free[spike] = False
+        s.pending.append(spike[~s.mute[spike]])
+        s.g = s.g + self._deliver(s.pending.popleft()) * free       # refractory neurons discard input (see above)
+        if g_input is not None:
+            s.g = s.g + g_input * free
+        if len(s.act_np):
+            hit = hash3(s.seed, s.act_np, k) < s.thresholds          # the same counter-based events as the reference
+            if hit.any():
+                targets = s.act[torch.as_tensor(np.flatnonzero(hit), device=dev)]
+                targets = targets[free[targets]]
+                s.v[targets] += p.w_syn_mv * p.f_poi
+        if len(s.mod_np):
+            frame = min(k // s.mod_steps, len(s.mod_thresholds) - 1)
+            hit = hash3(s.seed, s.mod_np, k) < s.mod_thresholds[frame]
+            if hit.any():
+                targets = s.mod_t[torch.as_tensor(np.flatnonzero(hit), device=dev)]
+                targets = targets[free[targets]]
+                s.v[targets] += p.w_syn_mv * p.f_poi
+        if k in s.drive.events:
+            neurons, dv = s.drive.events[k]
+            neurons_t = torch.as_tensor(np.asarray(neurons, dtype=np.int64), device=dev)
+            dv_t = torch.as_tensor(np.asarray(dv, dtype=np.float32), device=dev)
+            keep = free[neurons_t]
+            s.v.index_add_(0, neurons_t[keep], dv_t[keep])
+        s.v[spike] = p.v_rst_mv
+        s.g[spike] = 0.0
+        if p.adaptation_mv:
+            s.adaptation = s.adaptation * math.exp(-p.dt_ms / p.tau_adaptation_ms)
+            s.adaptation[spike] += p.adaptation_mv
+        s.spikes.append(spike)
+        if len(s.trace_np):
+            s.traces.append(s.v[s.trace_t].clone())
+        s.k = k + 1
+        return spike
+
+    def finish(self, s: LIFState) -> Run:
+        torch = self.torch
+        counts = np.array([x.numel() for x in s.spikes], dtype=np.int64)
+        tick_indptr = np.r_[0, np.cumsum(counts)].astype(np.int64)
+        neuron_index = torch.cat(s.spikes).cpu().numpy() if s.spikes else np.zeros(0)
+        traces = (torch.stack(s.traces).cpu().numpy().astype(np.float32) if s.traces
+                  else np.zeros((s.k, len(s.trace_np)), dtype=np.float32))
+        return Run(self.n, s.k, self.params.dt_ms, tick_indptr, neuron_index.astype(np.int32),
+                   s.trace_np.astype(np.int32), traces)
+
+    def run(self, steps: int, drive: Drive | None = None, seed: int = 0,
+            trace_neurons: np.ndarray | None = None) -> Run:
+        s = self.start(drive, seed, trace_neurons)
+        for _ in range(steps):
+            self.advance(s)
+        return self.finish(s)
+
+
+def photoreceptor_drive(neurons: np.ndarray, columns: np.ndarray, intensity: np.ndarray,
+                        rate_at_full_hz: float = 300.0, steps_per_frame: int = 50) -> Drive:
+    """E1's transduction: light as Poisson input to spiking photoreceptors, at ``rate_at_full_hz`` times the
+    intensity of each photoreceptor's column (grey, 0.5, gives the published model's 150 Hz activation rate), frame
+    by frame. ``neurons`` index the spiking network; ``columns`` are their eye columns; ``intensity`` is
+    (frames, columns)."""
+    rates = rate_at_full_hz * np.asarray(intensity, dtype=np.float64)[:, np.asarray(columns, dtype=np.int64)]
+    return Drive(modulated=(np.asarray(neurons, dtype=np.int64), rates, int(steps_per_frame)))
