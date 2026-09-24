@@ -37,6 +37,8 @@ neither runs in a browser. `flycns` does, once, with tests.
 | `flycns.eyes` | Python | per-eye column tables, modelled viewing directions (the vertical set by the dorsal rim), ommatidium sampling of a scene |
 | `flycns.optic_lobe` | Python | both MaleCNS optic lobes as graded units with flyvis's numbers transferred, stand-in photoreceptors, CT1 compartments |
 | `flycns.motion` | Python | moving edges on the eyes, and flyvis's direction-selectivity measures |
+| `flycns.dynamics.hybrid` | Python | the whole CNS coupled: graded optic lobes and the LIF through the bridge and the feedback (E2, E4); flyvis's lattices mapped (E3) |
+| `flycns.mapped` | Python | E3's geometry: where flyvis's lattice columns look, and which MaleCNS neurons they stand for |
 | `flycns.dynamics` | Python (NumPy reference, PyTorch GPU) | LIF (Shiu), graded optic lobe (flyvis-style), the graded-to-spiking bridge, stabilisers, stimulation and silencing |
 | `flycns.record` | Python | spike and graded-activity recordings in the shared binary format |
 | `@fasl-work/flycns` | TypeScript + WGSL (+ WASM fallback) | loaders for the compiled format and recordings; the same dynamics on WebGPU; a worker-based fallback |
@@ -102,6 +104,7 @@ CPU paths. GPU paths are compared by tolerance (section 7), never claimed bit-id
 |---|---|
 | Python reference vs a literal Brian2 transcription of `model.py`, small circuits | identical spike times and neuron indices |
 | Graded engines vs flyvis 1.2.0 running its own network 000 (45,669 neurons, 200 steps) | every neuron at every step within 1e-5 (measured 2.4e-6) |
+| Hybrid GPU vs NumPy, small CNS | identical spikes; graded activity within 1e-4 |
 | Direction-selectivity measures vs flyvis's own, on its lattice, networks 000 to 004 | DSI within 1e-5; preferred direction within 0.01 degrees wherever flyvis's DSI exceeds 0.01 |
 | NumPy reference vs PyTorch GPU, whole CNS | moderate drive, 200 ms: active-neuron Jaccard >= 0.99 and per-neuron count correlation >= 0.99; strong drive, 500 ms: five GPU trials against five independent reference trials correlate at least at the 5th percentile of the reference against itself over the 126 splits of ten seeds |
 | Python reference vs the TypeScript fallback, fixed seeds | identical spike trains on the parity circuits; whole CNS as the GPU row |
