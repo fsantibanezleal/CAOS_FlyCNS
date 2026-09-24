@@ -3,6 +3,32 @@
 All notable changes are recorded here, newest first, grouped Added / Changed / Fixed / Removed. Versions are
 `X.XX.XXX` (the `VERSION` file, the tags and this log); the manifests carry the semantic form (`0.0.0`).
 
+## [0.06.000] - 2026-09-24
+
+### Added
+
+- The whole CNS coupled (`flycns.dynamics.hybrid`): graded optic lobes every 5 ms and the published LIF for the other
+  70,775 neurons every 0.1 ms, joined through the release's synapses: the bridge (release above grey acting as a
+  spike train of rate beta times the deviation; silent at grey; beta = 100 stated) and the feedback (filtered rates
+  over beta, flyvis's initialisation drive per class). NumPy and PyTorch engines, checked against closed forms and
+  against each other.
+- The four engines of the plan: E1 the published model everywhere with light as Poisson input to photoreceptors
+  (`photoreceptor_drive`); E2 the transferred optic lobes plus LIF; E3 flyvis's own network per eye mapped onto the
+  MaleCNS neurons (`flycns.mapped`, the lattice's layout measured from flyvis's own stimuli); E4 E2 with flyverse's
+  stabilisers (`stabilised_weights`; `LIFParams.adaptation_mv`).
+- Poisson input whose rate changes over time (`Drive.modulated`), identical event for event to the published
+  activation at a constant rate.
+- Measured on MaleCNS (`scripts/measure_whole_cns.py`): a flash reaches the nerve-cord motor neurons through E2, E3
+  and E4 (3,500, 3,584 and 1,938 spikes), silent at grey; E1's photoreceptors fire 515,213 spikes and no other neuron
+  one; over beta 25 to 400 light always reaches the motor neurons; the stabilisers leave the published model one
+  state (ten seeds within 2%, against a spread from 271,834 to 519,691 spikes).
+- Wiki: the whole CNS, coupled, with the coupling's equations, a figure and the measurements.
+
+### Changed
+
+- The LIF engines also run one step at a time (`start`, `advance`, `finish`), with an optional extra input to `g`;
+  `run` is unchanged and still identical to the Brian2 transcription.
+
 ## [0.05.000] - 2026-09-24
 
 ### Added

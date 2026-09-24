@@ -130,3 +130,47 @@ three fastest speeds cross each modelled eye; every T4 and T5 cell within 15 deg
 own T4 subtype is selective with the known direction (91 cases), the transferred one keeps it within 45 degrees on
 both eyes in 78 (86%, median error 8 to 11 degrees); T5 keeps it in 15 of 39 (38%), with small selectivity. 41 of 50
 transferred networks stay bounded over 20 s of grey (flyvis's own lattice: 49).
+
+## Part 3: the whole CNS coupled, engines E1 to E4 (0.06.000)
+
+**The split.** The graded units of part 2 (95,925 optic-lobe neurons plus stand-ins and CT1 compartments) run every
+5 ms, flyvis's step, validated against flyvis; the other 70,775 neurons of the release run as the published LIF
+every 0.1 ms. 13.76 million connections join spiking neurons, 1.94 million run from graded to spiking neurons (7.44
+million synapses) and 0.83 million from spiking to graded neurons (2.75 million synapses).
+
+**The bridge.** A graded neuron releases continuously; its release above the grey steady state,
+``D = max(V, 0) - max(V_grey, 0)``, acts on each spiking target as a spike train of rate ``beta x D``: each of the
+connection's ``n`` synapses adds ``sign x w_syn`` per spike, so ``g`` gains ``beta D sign n w_syn`` per second. It is
+added in the synapses slot of every LIF step, for neurons that are not refractory, recomputed every graded step. At
+grey the spiking CNS receives nothing, as the published model fires nothing without input. ``beta``, spikes per
+second per unit of release, is the free parameter every hybrid in the survey has; 100 by default, and the product
+reports it. Measured over 25 to 400: the visual projection neurons' spikes during a flash scale nearly in proportion
+(8,382 to 133,641), the nerve-cord motor neurons' far less (2,624 to 5,036); light reaches the motor neurons at every
+value.
+
+**Feedback.** A spiking neuron acts on a graded target as release of ``r / beta``, ``r`` its rate filtered with the
+published synaptic time constant (5 ms); each graded target receives from each class of spiking presynaptic neurons
+flyvis's initialisation drive, ``0.01 x 2``, spread over the class's synapses, with the transmitter's sign.
+
+**E1, the published model everywhere.** Light enters as Poisson input to every photoreceptor with a column, at 300 Hz
+times the column's intensity (grey gives the paper's 150 Hz), with no refractory period, as the paper's activated
+neurons. It fails exactly as the flyverse project reported: under a flash the photoreceptors fire 515,213 spikes and
+no other neuron fires one. The mechanism is the sign: photoreceptors are histaminergic, inhibitory, and inhibiting a
+spiking neuron that is silent does nothing, while in the fly the lamina's graded neurons signal by being
+hyperpolarised.
+
+**E2** is parts 1 and 2 with the bridge and feedback: under a flash the whole CNS answers (41,019 spikes in visual
+projection neurons, 69,378 in the central brain, 5,455 in descending and 3,500 in nerve-cord motor neurons), silent
+at grey.
+
+**E3** runs flyvis's own network per eye on its lattice and gives each MaleCNS neuron of a flyvis type the activity
+of the lattice cell of its type that looks where it looks (72,414 units mapped, 5,417 outside the lattice); the
+lattice's layout in flyvis's stimulus frame is measured from flyvis's own moving edges, and flyvis's frame is the
+mirror of the eyes' (its T4a prefers front-to-back motion in the eyes' frame, as it must). Under the flash it carries
+activity to the central brain as E2 does (45,558 spikes in visual projection neurons, 3,584 in motor neurons).
+
+**E4** is E2 with flyverse's stabilisers, in a stated order: each connection capped at 60 synapse-equivalents,
+same-type connections scaled by 0.1, every neuron whose input then exceeds 5,000 synapse-equivalents scaled down to
+it, and spike-frequency adaptation of 1.5 mV per spike decaying with 200 ms. On the published model under the strong
+gustatory drive, ten seeds' 500 ms totals spread from 271,834 to 519,691 spikes (two states); with the stabilisers
+from 165,430 to 168,527 (one state).

@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="440" viewBox="0 0 800 440" role="img" aria-labelledby="t d"><title id="t">The four engines on the whole male CNS</title><desc id="d">Left: spikes per superclass during a 300 ms full-field flash for engines E1 to E4, on a log scale; E1 has none beyond the photoreceptors. Right: spikes in 500 ms under a strong gustatory drive over ten seeds, spread over two states in the published model and gathered in one with the stabilisers.</desc>
+<style>.bg{fill:#0d1117} .h{font:600 15px 'Segoe UI',Helvetica,Arial,sans-serif;fill:#c9d1d9} .m{font:12px 'Segoe UI',Helvetica,Arial,sans-serif;fill:#8b949e} .b{font:13px 'Segoe UI',Helvetica,Arial,sans-serif;fill:#c9d1d9} .grid{stroke:#30363d;stroke-width:1}</style>
+<rect class="bg" width="800" height="440"/>
+<text class="h" x="24" y="30">Spikes during a 300 ms flash</text>
+<line class="grid" x1="170.0" y1="48" x2="170.0" y2="372"/>
+<text class="m" x="170.0" y="388" text-anchor="middle">1e2</text>
+<line class="grid" x1="252.5" y1="48" x2="252.5" y2="372"/>
+<text class="m" x="252.5" y="388" text-anchor="middle">1e3</text>
+<line class="grid" x1="335.0" y1="48" x2="335.0" y2="372"/>
+<text class="m" x="335.0" y="388" text-anchor="middle">1e4</text>
+<line class="grid" x1="417.5" y1="48" x2="417.5" y2="372"/>
+<text class="m" x="417.5" y="388" text-anchor="middle">1e5</text>
+<line class="grid" x1="500.0" y1="48" x2="500.0" y2="372"/>
+<text class="m" x="500.0" y="388" text-anchor="middle">1e6</text>
+<text class="b" x="162" y="90" text-anchor="end">visual projection</text>
+<text class="m" x="174" y="75">0</text>
+<rect x="170" y="78" width="215.6" height="10" fill="#58a6ff"/>
+<rect x="170" y="90" width="219.3" height="10" fill="#3fb950"/>
+<rect x="170" y="102" width="207.2" height="10" fill="#d29922"/>
+<text class="b" x="162" y="152" text-anchor="end">visual centrifugal</text>
+<text class="m" x="174" y="137">0</text>
+<rect x="170" y="140" width="139.2" height="10" fill="#58a6ff"/>
+<rect x="170" y="152" width="139.4" height="10" fill="#3fb950"/>
+<rect x="170" y="164" width="121.5" height="10" fill="#d29922"/>
+<text class="b" x="162" y="214" text-anchor="end">central brain</text>
+<text class="m" x="174" y="199">0</text>
+<rect x="170" y="202" width="234.4" height="10" fill="#58a6ff"/>
+<rect x="170" y="214" width="236.7" height="10" fill="#3fb950"/>
+<rect x="170" y="226" width="223.9" height="10" fill="#d29922"/>
+<text class="b" x="162" y="276" text-anchor="end">descending</text>
+<text class="m" x="174" y="261">0</text>
+<rect x="170" y="264" width="143.3" height="10" fill="#58a6ff"/>
+<rect x="170" y="276" width="145.4" height="10" fill="#3fb950"/>
+<rect x="170" y="288" width="135.0" height="10" fill="#d29922"/>
+<text class="b" x="162" y="338" text-anchor="end">nerve-cord motor</text>
+<text class="m" x="174" y="323">0</text>
+<rect x="170" y="326" width="127.4" height="10" fill="#58a6ff"/>
+<rect x="170" y="338" width="128.2" height="10" fill="#3fb950"/>
+<rect x="170" y="350" width="106.2" height="10" fill="#d29922"/>
+<rect x="24" y="410" width="12" height="12" fill="#8b949e"/>
+<text class="b" x="42" y="420">E1 spiking everywhere</text>
+<rect x="199" y="410" width="12" height="12" fill="#58a6ff"/>
+<text class="b" x="217" y="420">E2 graded optic lobe</text>
+<rect x="374" y="410" width="12" height="12" fill="#3fb950"/>
+<text class="b" x="392" y="420">E3 flyvis per eye</text>
+<rect x="549" y="410" width="12" height="12" fill="#d29922"/>
+<text class="b" x="567" y="420">E4 stabilised</text>
+<text class="h" x="560" y="30">One state or two</text>
+<text class="m" x="560" y="48">spikes in 500 ms, strong drive, 10 seeds</text>
+<line class="grid" x1="600" y1="304.0" x2="780" y2="304.0"/>
+<text class="m" x="594" y="308.0" text-anchor="end">200k</text>
+<line class="grid" x1="600" y1="192.0" x2="780" y2="192.0"/>
+<text class="m" x="594" y="196.0" text-anchor="end">400k</text>
+<line class="grid" x1="600" y1="80.0" x2="780" y2="80.0"/>
+<text class="m" x="594" y="84.0" text-anchor="end">600k</text>
+<circle cx="636" cy="125.0" r="4" fill="#f85149"/>
+<circle cx="643" cy="211.0" r="4" fill="#f85149"/>
+<circle cx="650" cy="129.1" r="4" fill="#f85149"/>
+<circle cx="657" cy="263.3" r="4" fill="#f85149"/>
+<circle cx="664" cy="207.0" r="4" fill="#f85149"/>
+<circle cx="636" cy="165.0" r="4" fill="#f85149"/>
+<circle cx="643" cy="233.1" r="4" fill="#f85149"/>
+<circle cx="650" cy="263.1" r="4" fill="#f85149"/>
+<circle cx="657" cy="220.9" r="4" fill="#f85149"/>
+<circle cx="664" cy="263.8" r="4" fill="#f85149"/>
+<text class="b" x="650" y="382" text-anchor="middle">published</text>
+<circle cx="726" cy="322.9" r="4" fill="#58a6ff"/>
+<circle cx="733" cy="322.2" r="4" fill="#58a6ff"/>
+<circle cx="740" cy="322.3" r="4" fill="#58a6ff"/>
+<circle cx="747" cy="322.5" r="4" fill="#58a6ff"/>
+<circle cx="754" cy="322.8" r="4" fill="#58a6ff"/>
+<circle cx="726" cy="322.9" r="4" fill="#58a6ff"/>
+<circle cx="733" cy="321.6" r="4" fill="#58a6ff"/>
+<circle cx="740" cy="322.8" r="4" fill="#58a6ff"/>
+<circle cx="747" cy="322.9" r="4" fill="#58a6ff"/>
+<circle cx="754" cy="323.4" r="4" fill="#58a6ff"/>
+<text class="b" x="740" y="382" text-anchor="middle">stabilised</text>
+</svg>
