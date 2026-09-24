@@ -1,0 +1,248 @@
+{
+  "arrays": [
+    {
+      "bytes": 13000,
+      "dtype": "float32",
+      "file": "bias.bin",
+      "name": "bias",
+      "sha256": "aab655c3bb8801e3b9583b67a8299877a8278d0c23a03611f25ba46a927242ae",
+      "shape": [
+        50,
+        65
+      ]
+    },
+    {
+      "bytes": 4710,
+      "dtype": "int16",
+      "file": "group_du.bin",
+      "name": "group_du",
+      "sha256": "d317a8269e34bb7c24e5fe8b674203e5ef8821409f63842288527035d73c8083",
+      "shape": [
+        2355
+      ]
+    },
+    {
+      "bytes": 4710,
+      "dtype": "int16",
+      "file": "group_dv.bin",
+      "name": "group_dv",
+      "sha256": "fbb9e3bd3d5d77f0cc3942dac8cfdfb93eae90a9215a991046d0d38d4246accf",
+      "shape": [
+        2355
+      ]
+    },
+    {
+      "bytes": 9420,
+      "dtype": "float32",
+      "file": "group_n_syn.bin",
+      "name": "group_n_syn",
+      "sha256": "19ae8debe3345a1c545cabdbe8ea98e6687fc7723349d2a9f7beeb007f7ea746",
+      "shape": [
+        2355
+      ]
+    },
+    {
+      "bytes": 4710,
+      "dtype": "uint16",
+      "file": "group_pair.bin",
+      "name": "group_pair",
+      "sha256": "ca442065d4dd5bf0b15bd4e75576616e2de00dca0e702c1ca170263cdc77bc7f",
+      "shape": [
+        2355
+      ]
+    },
+    {
+      "bytes": 604,
+      "dtype": "int8",
+      "file": "pair_sign.bin",
+      "name": "pair_sign",
+      "sha256": "5725dc8fd49f11dfd62e51420feffb5eef4276c5bab8becc1d3fb476fa36c023",
+      "shape": [
+        604
+      ]
+    },
+    {
+      "bytes": 1208,
+      "dtype": "uint16",
+      "file": "pair_source.bin",
+      "name": "pair_source",
+      "sha256": "e4457b0d98807d82c371726f4d46aca1e0dab4d2d39c22f45563c04859dc0e59",
+      "shape": [
+        604
+      ]
+    },
+    {
+      "bytes": 1208,
+      "dtype": "uint16",
+      "file": "pair_target.bin",
+      "name": "pair_target",
+      "sha256": "205cf8d6bc7c7202e4bc173aeeeedb1a0d840eb751392d0a207df3a460bd64dd",
+      "shape": [
+        604
+      ]
+    },
+    {
+      "bytes": 120800,
+      "dtype": "float32",
+      "file": "strength.bin",
+      "name": "strength",
+      "sha256": "cd36b8a4982233534bae69084faf6719e1cd32fa5b3fa7dfdbfc31ee0d6972b8",
+      "shape": [
+        50,
+        604
+      ]
+    },
+    {
+      "bytes": 13000,
+      "dtype": "float32",
+      "file": "time_const_s.bin",
+      "name": "time_const_s",
+      "sha256": "9f35013972404b1a453a7621cb6609627c04f1a48cdc5b16621ac0c5a33486a1",
+      "shape": [
+        50,
+        65
+      ]
+    }
+  ],
+  "counts": {
+    "groups": 2355,
+    "models": 50,
+    "pairs": 604,
+    "types": 65
+  },
+  "release": {
+    "ensemble": "flow/0000",
+    "model": "flyvis",
+    "paper": "doi:10.1038/s41586-024-07939-3",
+    "version": "1.2.0"
+  },
+  "schema": "flycns.compiled/1",
+  "sources": [
+    {
+      "checkpoints_sha256": [
+        "d8a57a022aa18ca338599be713af9db29b89cde4b00098ffe42b78f0d583e46a",
+        "f351b025e25fc02e6ab9e2a80f6fd641fc62f5b3f33210e0a2318af5cc0614ae",
+        "34c70cdc875f9602053f31acf03443cc071982923a9407a367666086637ae866",
+        "b6764982671b5f0051e682360adc52f8ed6493e478fb9c0edbf66f1d256e1501",
+        "d3e5ffd015020dec45ccb87c92ceb8091a8f8e65a83a553a9dc3887dd1b6072d",
+        "237db8bd6b015aacd54a0719014ef5a146236a6b4e2ab769b81d314907753ffa",
+        "6fb45c35839d04f78073b5a8e67fabcf59131fbf340925459952a5ff1de3b4ea",
+        "cd1b53eef47db91d3529613a98d0879a739390dcfc53d6148a6953ff9fb13469",
+        "e54b1f0790f97ef791b7aeee056fb88a2bfc7ab4329dd9f7dca10300eb945897",
+        "37c2676a83587dd7642cbbd3a0d0be219cb999d587ac1830285bdc838f4891f6",
+        "ed8be3c396c7a549b2d8b85cd5b14527c43eec58b5ddaae054d18ab9a2b6a300",
+        "bad9dabe0e9432a1f305a4544a847a1fdf7da871021f6d69b1e52a3fa7fcda67",
+        "d0c816909660cae35811b1631b3ff8cbd40a3acc076b6b083f4c88abbfc19f60",
+        "bde19f62d1a9ce2fce20fce68b72cced1a082a5192c210f4a69c89708e1476d8",
+        "0bcac347539e36750a00adf71e7c1236a341c4b363cf6b84c0fb6fed349cf967",
+        "02d2cd384f7f8040582ab33bd52fa2c44edce50ca5be27897d0f105475d819cb",
+        "8fbfc7d39d48eca441e0e23a735dcbedb0a3e364b3a9de48cfa651d0e7c8e7bc",
+        "299ac9ab1a50e5dfc5f1716627a9b09f7c5abd8820436eda63f4a178c555e1e1",
+        "8c738269fdbecce5da3e4cc5d44718910be1adc61fc693959792eb1817960277",
+        "6fb18d56f4c014ccf7a53b6914df6fe93f8f594d28b056ebe056a919d70aa596",
+        "03061634c6c83a2b4560005d0e97f40103ef5767d0a831b5205256bc47919ef9",
+        "9285061e7e0af9b9e23e16a976f3ad158808a0a708c24590de1b85c23aea0727",
+        "dd864e23444915ad4bc4fab9d1c401567923c31388c174d3b3caf2b7874d4383",
+        "41a283e29e36ad7dbf2be0604138abd7887b87a1e7d168cf17d3f21103d5b88d",
+        "8400223db1a0702c2ec4eb863e47918fdcc5b998f6718c4f8b0f1a41264f386a",
+        "3c780db8bc7c1d5fa614e2475e4dc42b2ad15375b522f6e7ed8e153fe62847e4",
+        "6981fb1933705bfcb13b072f4c26520e3c3af5cb7e87652efbb6877ddf68b3e9",
+        "5f3723c0011f6d561ecb3861b2a2b8e13ea923011fd23a10f7c33ff0cbb6b6e7",
+        "b19c5c1e94760ec1479bea2adba122441c2c4c95e2ca174526a922d964395b64",
+        "2454e817485656d040fcee69eddc30e6ff7cd587ecd6a908ef3564e03ec95835",
+        "2b7a878d5f4328e2a26291522d2807e5b5a47410da16c15fa0fd55c195d464f7",
+        "1b6a145b53375ba5eea53c30aacd1ad916f756458acdce1c11dfbf733bb6c49a",
+        "e8b23729a4951ab3584d8d6fb7bf9b54e4a675ab05fa4afb3d49d9dde07ea858",
+        "4dead734972b429850aca796eb23874e16d449036c892a99cbae0b02856b1ef6",
+        "7145f3e4504557d0439ab95c79a1b300fcdef9b8889c65022bd5318db7097980",
+        "2c59918d9bd267330d9a8c2a9f42da1dc5335901a6c1c62fdcfdc10faa3ff737",
+        "052b7e31cebc6b60f73e37e166911dc6889795abbaa5f38717d5374ab1d0cc6d",
+        "93f25c9d4dc6a6f93d7a8d19fc372a9eeedc5455b388779de8152763337baeee",
+        "a336ca91868486678c4dfbf871ef8f1c009c12974df20289b8697a79f1db86e0",
+        "a280006d540ceb2d1e6e0cd25e912500235ea79e3c258cf3f93ea518459083d7",
+        "67a85cdcfb55d9e59fbe750a365c044d333d782ab89c0d44d75ffe9a736fac84",
+        "76759a8d7d714bf7886000e41eca56b8c02aecd2df7feb630f4aa98f645f6f32",
+        "d57aa0a374be4f63a2e8d955a73b15fbcc72b799fcb7906ff5cd6366b42a0f6d",
+        "9536964c530de66dd3356e04c47d4057a2764e25a40faf04a45c8e8083612d76",
+        "efc1850265ed305bdc2b6c645fe8a74faa2b2ea2a238d097148ca490b83fcd80",
+        "19323db328787e33b91ac0473046f0e361ef4dadf0394e3f389b5359b9fdedce",
+        "604b2cf4dddbd7fbaefad7b350903ace541acb1c412242705dccf246cd904750",
+        "f5f98dbc53a94606a07e21079268b57a26950be66fe2f879fb06647a35d870fb",
+        "781eae13aaef429af6b98f0e4a436974a41f399ed532aabfc2d7973d28545bfe",
+        "b0dd6e351eed6b3ac18941fb02760c97426fe71aba1c194b0bd24a09d8d5960f"
+      ],
+      "key": "flyvis-1.2.0-pretrained-flow-0000",
+      "license": "MIT (Copyright (c) 2023 Janne K. Lappalainen, Fabian D. Tschopp, Mason McGill, Jakob H. Macke, Srinivas C. Turaga)",
+      "url": "https://github.com/TuragaLab/flyvis (results_pretrained_models.zip, via flyvis download_pretrained)"
+    }
+  ],
+  "strings": {
+    "type": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6",
+      "R7",
+      "R8",
+      "L1",
+      "L2",
+      "L3",
+      "L4",
+      "L5",
+      "Lawf1",
+      "Lawf2",
+      "Am",
+      "C2",
+      "C3",
+      "CT1(Lo1)",
+      "CT1(M10)",
+      "Mi1",
+      "Mi2",
+      "Mi3",
+      "Mi4",
+      "Mi9",
+      "Mi10",
+      "Mi11",
+      "Mi12",
+      "Mi13",
+      "Mi14",
+      "Mi15",
+      "T1",
+      "T2",
+      "T2a",
+      "T3",
+      "T4a",
+      "T4b",
+      "T4c",
+      "T4d",
+      "T5a",
+      "T5b",
+      "T5c",
+      "T5d",
+      "Tm1",
+      "Tm2",
+      "Tm3",
+      "Tm4",
+      "Tm5Y",
+      "Tm5a",
+      "Tm5b",
+      "Tm5c",
+      "Tm9",
+      "Tm16",
+      "Tm20",
+      "Tm28",
+      "Tm30",
+      "TmY3",
+      "TmY4",
+      "TmY5a",
+      "TmY9",
+      "TmY10",
+      "TmY13",
+      "TmY14",
+      "TmY15",
+      "TmY18"
+    ]
+  }
+}

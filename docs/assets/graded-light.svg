@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="380" viewBox="0 0 800 380" role="img" aria-labelledby="t d">
+  <title id="t">A graded neuron, and the chain that holds the engine to flyvis</title>
+  <desc id="d">Left: a graded neuron sums the rectified voltages of its presynaptic neurons, each times its weight, adds its resting potential and its input, and relaxes towards that sum with its time constant. Right: flyvis 1.2.0 runs its own network 000 in its own environment; the network and the run are extracted; the flycns engines replay the network and match every neuron at every step.</desc>
+  <style>
+    .bg { fill: #ffffff; }
+    .node { fill: #f6f8fa; stroke: #d0d7de; stroke-width: 1.5; }
+    .key { fill: #f6f8fa; stroke: #0969da; stroke-width: 2; }
+    .ok { fill: #f6f8fa; stroke: #1a7f37; stroke-width: 2; }
+    .h { font: 600 15px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #1f2328; }
+    .b { font: 13px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #1f2328; }
+    .m { font: 13px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #59636e; }
+    .title { font: 600 16px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #1f2328; }
+    .edge { stroke: #59636e; stroke-width: 1.5; fill: none; }
+    .ah { fill: #59636e; }
+    .sep { stroke: #d0d7de; stroke-width: 1; }
+  </style>
+  <rect class="bg" width="800" height="380"/>
+
+  <text class="title" x="24" y="34">One graded neuron</text>
+  <rect class="node" x="24" y="56" width="120" height="44" rx="6"/>
+  <text class="b" x="36" y="83">presynaptic V_j</text>
+  <rect class="node" x="24" y="120" width="120" height="44" rx="6"/>
+  <text class="b" x="36" y="147">presynaptic V_k</text>
+  <rect class="node" x="176" y="56" width="104" height="108" rx="6"/>
+  <text class="h" x="188" y="80">release</text>
+  <text class="b" x="188" y="104">max(V, 0)</text>
+  <text class="b" x="188" y="124">times the</text>
+  <text class="b" x="188" y="142">weight w</text>
+  <rect class="key" x="176" y="196" width="104" height="92" rx="6"/>
+  <text class="h" x="188" y="220">sum</text>
+  <text class="b" x="188" y="244">+ resting b</text>
+  <text class="b" x="188" y="264">+ input x</text>
+  <rect class="node" x="24" y="216" width="120" height="56" rx="6"/>
+  <text class="b" x="36" y="239">eye column</text>
+  <text class="b" x="36" y="259">R1 to R8</text>
+  <rect class="key" x="176" y="310" width="164" height="50" rx="6"/>
+  <text class="b" x="188" y="331">V relaxes to the sum</text>
+  <text class="b" x="188" y="350">with max(tau, dt)</text>
+
+  <line class="edge" x1="144" y1="78" x2="168" y2="94"/>
+  <polygon class="ah" points="176,99 166,98 170,90"/>
+  <line class="edge" x1="144" y1="142" x2="168" y2="126"/>
+  <polygon class="ah" points="176,121 170,130 166,122"/>
+  <line class="edge" x1="228" y1="164" x2="228" y2="188"/>
+  <polygon class="ah" points="228,196 223,187 233,187"/>
+  <line class="edge" x1="144" y1="242" x2="168" y2="242"/>
+  <polygon class="ah" points="176,242 167,237 167,247"/>
+  <line class="edge" x1="228" y1="288" x2="228" y2="302"/>
+  <polygon class="ah" points="228,310 223,301 233,301"/>
+
+  <line class="sep" x1="380" y1="24" x2="380" y2="360"/>
+
+  <text class="title" x="404" y="34">Held to flyvis itself</text>
+  <rect class="node" x="404" y="56" width="372" height="56" rx="6"/>
+  <text class="h" x="416" y="80">flyvis 1.2.0, in its own environment</text>
+  <text class="b" x="416" y="100">runs its network 000: grey, a flash, a moving edge</text>
+  <rect class="node" x="404" y="136" width="372" height="56" rx="6"/>
+  <text class="h" x="416" y="160">extracted</text>
+  <text class="b" x="416" y="180">45,669 neurons, 1,513,231 connections, the whole run</text>
+  <rect class="key" x="404" y="216" width="372" height="56" rx="6"/>
+  <text class="h" x="416" y="240">flycns engines replay it</text>
+  <text class="b" x="416" y="260">NumPy (float64) and PyTorch (float32, GPU)</text>
+  <rect class="ok" x="404" y="296" width="372" height="64" rx="6"/>
+  <text class="h" x="416" y="320">every neuron, every 5 ms step</text>
+  <text class="b" x="416" y="342">largest difference 2.4e-6 (activity spans -3.75 to 6.59)</text>
+
+  <line class="edge" x1="590" y1="112" x2="590" y2="128"/>
+  <polygon class="ah" points="590,136 585,127 595,127"/>
+  <line class="edge" x1="590" y1="192" x2="590" y2="208"/>
+  <polygon class="ah" points="590,216 585,207 595,207"/>
+  <line class="edge" x1="590" y1="272" x2="590" y2="288"/>
+  <polygon class="ah" points="590,296 585,287 595,287"/>
+</svg>

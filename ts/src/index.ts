@@ -4,4 +4,4 @@
  * The display version (X.XX.XXX) lives in the repository's VERSION file; this constant is its semantic form and
  * must equal the npm manifest's version (a test checks it).
  */
-export const VERSION = "0.3.0";
+export const VERSION = "0.4.0";

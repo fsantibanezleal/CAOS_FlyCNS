@@ -34,3 +34,5 @@ def test_compilation_is_deterministic(synthetic_release, tmp_path):
     assert manifest_a == manifest_b
     for entry in manifest_a["arrays"]:
         assert (first / entry["file"]).read_bytes() == (second / entry["file"]).read_bytes()
+    # the manifest's bytes do not depend on the system that wrote it (LF line endings, also on Windows)
+    assert b"\r" not in (first / "manifest.json").read_bytes()
