@@ -84,7 +84,9 @@ def write_compiled(directory: Path, arrays: dict[str, np.ndarray], meta: dict[st
         "strings": meta.get("strings", {}),
         "arrays": entries,
     }
-    (directory / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    # LF on every system, so the same inputs give the same bytes on Windows and Linux
+    (directory / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8",
+                                             newline="\n")
     return manifest
 
 

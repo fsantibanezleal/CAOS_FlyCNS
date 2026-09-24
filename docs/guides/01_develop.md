@@ -25,6 +25,25 @@ rewires 25.6 million connections (about 20 s). Run them before every release tha
 .venv/Scripts/python -m pytest -rs -m "data or gpu"
 ```
 
+## The flyvis extraction (once per flyvis version)
+
+The trained flyvis numbers already ship inside the package; the extraction is needed only to refresh them or to
+produce the parity target of the graded engines (`FLYCNS_FLYVIS_EXTRACT`, default
+`E:/_Datos/destello/models/flyvis-1.2.0`). flyvis needs Python 3.9 to 3.12 and dependencies flycns does not carry,
+so it runs in its own environment:
+
+```bash
+py -3.11 -m venv flyvis_venv
+flyvis_venv/Scripts/python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+flyvis_venv/Scripts/python -m pip install flyvis==1.2.0
+flyvis_venv/Scripts/python -m pip install -e path/to/CAOS_FlyCNS           # the script writes flycns's format
+flyvis download-pretrained                                                  # results_pretrained_models.zip
+FLYVIS_ROOT_DIR=path/to/flyvis_data flyvis_venv/Scripts/python scripts/extract_flyvis_ensemble.py OUT_DIR
+```
+
+The script patches one Windows defect of flyvis's storage layer (datamate 1.0.0 deletes an h5 file it still holds
+open) before importing flyvis; run twice, it writes the same arrays byte for byte.
+
 ## TypeScript
 
 Node 20 or newer.

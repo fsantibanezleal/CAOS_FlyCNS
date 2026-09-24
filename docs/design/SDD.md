@@ -33,6 +33,7 @@ neither runs in a browser. `flycns` does, once, with tests.
 | `flycns.compiled` | Python | the compiled format: writer and hash-checked reader of the neuron table, signed CSR and partitions |
 | `flycns.nulls` | Python | null-model generators: degree-preserving rewiring, size-matched random graphs, sign shuffles |
 | `flycns.rng` | Python | the counter-based generator (MurmurHash3_x86_32) shared with TypeScript and WGSL |
+| `flycns.flyvis` | Python + data | the trained numbers of flyvis's 50 pretrained networks, in flyvis's order, with provenance |
 | `flycns.eyes` | Python | per-eye column tables, modelled viewing directions, ommatidium sampling of a scene, photoreceptor transduction |
 | `flycns.dynamics` | Python (NumPy reference, PyTorch GPU) | LIF (Shiu), graded optic lobe (flyvis-style), the graded-to-spiking bridge, stabilisers, stimulation and silencing |
 | `flycns.record` | Python | spike and graded-activity recordings in the shared binary format |
@@ -72,7 +73,8 @@ Everything a simulation needs is in the directory; a consumer never reads the re
 - **Graded optic lobe (Lappalainen et al. 2024 form):** non-spiking leaky voltage per neuron with a per-type time
   constant and resting potential, presynaptic output rectified, synaptic weight = sign x count x unitary strength per
   type pair, parameters transferred from the published ensemble; types outside the ensemble receive documented
-  defaults and are counted.
+  defaults and are counted. The engines compute flyvis 1.2.0's `PPNeuronIGRSynapses` exactly (forward Euler,
+  `tau_eff = max(tau, dt)`), which is checked against flyvis running its own network (section 7).
 - **Graded to spiking.** A spiking neuron's `g` receives the rectified output of its graded presynaptic partners
   through their synapse counts, with one bridge gain documented as a free parameter (as every hybrid in the survey
   has one).
@@ -93,6 +95,7 @@ CPU paths. GPU paths are compared by tolerance (section 7), never claimed bit-id
 | Pair | Tolerance |
 |---|---|
 | Python reference vs a literal Brian2 transcription of `model.py`, small circuits | identical spike times and neuron indices |
+| Graded engines vs flyvis 1.2.0 running its own network 000 (45,669 neurons, 200 steps) | every neuron at every step within 1e-5 (measured 2.4e-6) |
 | NumPy reference vs PyTorch GPU, whole CNS | moderate drive, 200 ms: active-neuron Jaccard >= 0.99 and per-neuron count correlation >= 0.99; strong drive, 500 ms: five GPU trials against five independent reference trials correlate at least at the 5th percentile of the reference against itself over the 126 splits of ten seeds |
 | Python reference vs the TypeScript fallback, fixed seeds | identical spike trains on the parity circuits; whole CNS as the GPU row |
 | Python reference vs WebGPU, whole CNS | as the GPU row, with Jaccard and correlation >= 0.98 in the moderate window |

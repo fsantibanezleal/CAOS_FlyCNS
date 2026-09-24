@@ -6,3 +6,5 @@ model gives on MaleCNS v1.0.
 1. [`01_eyes.md`](01_eyes.md): the two compound eyes over the release's own columns.
 2. [`02_lif.md`](02_lif.md): the whole-brain spiking model, its engines, what it does on the male CNS, and the
    null graphs it is compared against.
+3. [`03_graded.md`](03_graded.md): the graded visual neurons as flyvis computes them, the 50 trained networks, and
+   the engines held to flyvis itself.
