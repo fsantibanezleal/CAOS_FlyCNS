@@ -24,8 +24,12 @@ known to fall short.
 
 ## Status
 
-Version 0.02.000: the MaleCNS v1.0 compiler, the compiled format, and the two compound eyes over the release's own
-columns. The neuron dynamics are the next unit; this README lists capabilities only as they land.
+Version 0.04.000: the MaleCNS v1.0 compiler and compiled format; the two compound eyes over the release's own
+columns; the published spiking model on a NumPy reference and a GPU engine, identical to a literal Brian2
+transcription, with counter-based input, null graphs and recordings; and the graded visual neurons as flyvis
+computes them, with the 50 trained flyvis networks shipped as data and the engines held to flyvis itself. Next:
+the graded optic lobe on the MaleCNS wiring and its coupling to the spiking CNS. This README lists capabilities
+only as they land.
 
 ## Compile MaleCNS v1.0
 
@@ -45,11 +49,29 @@ print(graph.n_neurons, graph.n_edges, graph.counts["columns"])
 A table whose SHA-256 differs from the locked value is refused. Compilation streams the 13 GB synapse table in record
 batches and takes a few minutes on a desktop.
 
+## Simulate
+
+```python
+from pathlib import Path
+
+from flycns.compiled import read_compiled
+from flycns.dynamics import Drive, LIFReference, synaptic_weights
+
+graph = read_compiled(Path("compiled/malecns-v1.0"))
+weights = synaptic_weights(graph["csr_indptr"], graph["csr_indices"], graph["csr_count"], graph["neuron_sign"], 0.275)
+engine = LIFReference(graph["csr_indptr"], graph["csr_indices"], weights)      # or LIFTorch on a GPU
+run = engine.run(10_000, Drive(activate={1234: 150.0}), seed=0)                   # one second of model time
+print(run.spike_counts().sum(), "spikes")
+```
+
+The graded visual neurons run through `flycns.dynamics.GradedReference` (or `GradedTorch`), with the trained flyvis
+parameters from `flycns.flyvis.load_ensemble()`; see [`docs/models/03_graded.md`](docs/models/03_graded.md).
+
 ## Install (development)
 
 ```bash
 python -m venv .venv
-.venv/Scripts/python -m pip install -e ".[dev,release]"     # Windows; use .venv/bin/python elsewhere
+.venv/Scripts/python -m pip install -e ".[dev,release,parity]"     # add ,gpu for PyTorch; .venv/bin/python elsewhere
 .venv/Scripts/python -m pytest -rs
 npm ci && npm test
 ```
@@ -61,4 +83,6 @@ The wiki starts at [`docs/README.md`](docs/README.md).
 ## License
 
 Code: MIT. Connectome data are not redistributed here; they are fetched from the release with their hashes checked,
-and remain under their own licence (MaleCNS: CC BY 4.0).
+and remain under their own licence (MaleCNS: CC BY 4.0). The trained parameters of flyvis's pretrained networks
+ship inside the package under flyvis's MIT licence, whose notice travels with them
+(`src/flycns/data/flyvis-1.2.0-ensemble/LICENSE-flyvis.txt`).

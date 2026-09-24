@@ -3,6 +3,28 @@
 All notable changes are recorded here, newest first, grouped Added / Changed / Fixed / Removed. Versions are
 `X.XX.XXX` (the `VERSION` file, the tags and this log); the manifests carry the semantic form (`0.0.0`).
 
+## [0.04.000] - 2026-09-24
+
+### Added
+
+- The graded engines (`flycns.dynamics.GradedReference`, NumPy float64; `GradedTorch`, PyTorch float32): flyvis's
+  `PPNeuronIGRSynapses` dynamics (Lappalainen et al., *Nature* 2024), forward Euler with `tau_eff = max(tau, dt)`.
+  On flyvis 1.2.0's own network 000 (45,669 neurons, 1,513,231 connections) and a fixed stimulus they reproduce
+  flyvis's run, every neuron at every step, to 2.4e-6 and 1.4e-6.
+- The trained numbers of flyvis's 50 pretrained networks, shipped as package data (`flycns.flyvis.load_ensemble`):
+  65 resting potentials and time constants and 604 strengths per network, the fixed signs and 2,355 mean counts, in
+  flyvis's own order, with the SHA-256 of every source checkpoint and flyvis's MIT notice.
+- `scripts/extract_flyvis_ensemble.py`: the extraction, run in a separate environment with flyvis 1.2.0, which also
+  records network 000 in full and flyvis's run on it (the parity target).
+- Wiki: the graded visual neurons, with the equations, a diagram, the ensemble's measured spread and the parity
+  numbers.
+
+### Fixed
+
+- The README still described 0.02.000; it now lists what 0.03.000 and 0.04.000 added, and how to run a simulation.
+- Manifests written on Windows had CRLF line endings, so the same inputs gave different bytes on Windows and Linux;
+  `write_compiled` now writes LF everywhere.
+
 ## [0.03.000] - 2026-09-23
 
 ### Added
