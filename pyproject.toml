@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "flycns"
-version = "0.1.0"
+version = "0.1.1"
 description = "Compile fly connectome releases (MaleCNS v1.0) into simulation-ready graphs with two-eye column maps, and simulate the whole central nervous system (graded optic lobe plus spiking LIF) with parity between Python and the browser."
 readme = "README.md"
 requires-python = ">=3.11"
