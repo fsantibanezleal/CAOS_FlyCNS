@@ -61,3 +61,72 @@ The extraction also writes the 50 networks' parameters in flyvis's own order (ty
 exactly as flyvis's parameter objects list them, checked against the values the network uses) with the SHA-256 of
 every source checkpoint and flyvis's MIT notice. The 225 KB directory ships inside the package
 (`flycns/data/flyvis-1.2.0-ensemble/`), so the transfer onto MaleCNS needs neither flyvis nor the checkpoints.
+
+## Part 2: the transfer onto the MaleCNS optic lobes (0.05.000)
+
+**What becomes graded.** Every optic-lobe intrinsic neuron of MaleCNS, every photoreceptor, and every neuron of a
+type flyvis models wherever the release files it (TmY14 is filed as a visual projection neuron): 95,925 neurons and
+the 9.07 million connections among them. Everything else stays spiking and is coupled in part 3.
+
+**Classes and mapping.** 49 flyvis types exist in MaleCNS under the same name. Photoreceptors pool into R1-R6 (the
+release does not tell R1 from R6), R7 and R8 (their pale, yellow and dorsal-rim subtypes are one flyvis type each);
+TmY9a and TmY9b stand for flyvis's TmY9. flyvis's Am, Mi3, Mi11, Mi12 and Tm28 have no MaleCNS counterpart by name.
+MaleCNS's Am1 is not flyvis's lamina amacrine: it receives no R1-R6 synapse where flyvis's Am receives 227 per column,
+so it is not mapped.
+
+**Neurons** of a mapped class take the mean resting potential and time constant of their flyvis types; the other
+classes take flyvis's initial resting potential (0.5) and the network's median trained time constant.
+
+**Connections of a mapped pair keep flyvis's trained strength per synapse, capped per neuron.** The two datasets count
+synapses on one scale: over the 551 pairs both have, the median ratio of MaleCNS's synapses per target to flyvis's,
+weighted by flyvis's drive, is 1.08 (Mi1 onto T4a: 68.4 against 68.0). Transferring the strength per synapse keeps
+the release's own pair-by-pair differences, and three measured failures shaped the rest of the rule:
+
+1. A per-pair renormalisation (every pair's mean drive made flyvis's) concentrates flyvis's whole drive on the few
+   synapses of pairs the release barely has: one weight reached 1,528.
+2. Trained strengths on the release's synapses as they are drive the network to infinity: TmY4 onto TmY4 is seven
+   times denser in MaleCNS than in flyvis's column (a per-target drive of 2.5 against 0.37, a loop gain above one),
+   and the network diverges within 100 ms of grey. flyvis's seven-column reconstructions under-count lateral wiring.
+3. Capping each pair's average drive at flyvis's delays the divergence to 700 ms (T5d), through neurons that receive
+   several times their class's average.
+
+So each neuron's drive from each presynaptic class is capped at flyvis's: where a neuron receives ``c`` synapses from
+a class for which flyvis's column has ``N``, and ``c > N``, those synapses are scaled by ``N / c``. On network 000 the
+cap binds on 68% of the transferred synapses. Where MaleCNS gives fewer synapses, the connection keeps flyvis's
+strength and is weaker, as the release has it. (Making every neuron's drive exactly flyvis's, scaling up as well as
+down, was measured too: 47 of 50 networks then diverge.)
+
+**CT1 compartments.** flyvis models CT1 as one medulla (M10) and one lobula (Lo1) compartment per column, electrically
+separate; MaleCNS has one CT1 per side. As one unit, CT1 sums every column and carries the eye-wide average; T5 cells,
+whose local inhibition CT1 provides, then lose most of their direction selectivity. Each CT1 connection therefore
+moves to the compartment of its partner's column (the partner's own, or the column that feeds it most synapses),
+of the kind flyvis pairs the partner's type with: 3,536 compartments, all 41,557 CT1 connections moved.
+
+**Every other connection** (unmapped classes, or mapped pairs flyvis has no connection for; 69% of the synapses)
+takes flyvis's initialisation scale: each neuron receives from each such class a total of 0.01 x 2 (flyvis's strength
+scale times its median number of columnar offsets per pair), spread over that class's synapses, with the sign of the
+presynaptic transmitter.
+
+**Stand-in photoreceptors.** 945 of the 1,771 columns have no reconstructed R1-R6 terminal, 585 no R7 and 450 no R8.
+Where a column's photoreceptors deliver fewer synapses onto one of its columnar neurons than complete columns do
+(six R1-R6, one R7, one R8; medians measured on those columns, e.g. R1-R6 onto L1 211.5 and onto L2 221), one flagged
+stand-in per column and group supplies the difference and sees the column's light: 1,712 for R1-R6, 1,506 for R7,
+1,655 for R8. Light reaches 10,768 photoreceptors, 5,895 of them real.
+
+**Positions of neurons the release gives no column.** T4, T5, Tm3, T2 and TmY cells have no column in the
+annotations. Their viewing direction is the synapse-weighted mean direction of their presynaptic partners' columns,
+iterated so second-order cells inherit it; their home column (for the CT1 split) is the column that feeds them most.
+
+**The eyes.** Measuring direction selectivity through the U2 eye model exposed an error in it: the lattice's vertical
+was one 60-degree step off (``docs/models/01_eyes.md``). The eye model now sets the vertical by the dorsal rim; the
+T4 preferred directions, measured afterwards, then match the known ones.
+
+**Direction selectivity** is measured with flyvis's own measures (peak rectified response while the edge crosses the
+neuron; DSI as the vector sum over 12 directions against the larger polarity's sum; preferred direction the vector
+sum's angle), which reproduce flyvis's numbers on its lattice. On MaleCNS, full-field ON and OFF edges at flyvis's
+three fastest speeds cross each modelled eye; every T4 and T5 cell within 15 degrees of the eye's centre is measured.
+
+**Measured on all 50 networks** (`scripts/measure_optic_lobe.py`, `docs/models/04_optic_lobe.md`): where flyvis's
+own T4 subtype is selective with the known direction (91 cases), the transferred one keeps it within 45 degrees on
+both eyes in 78 (86%, median error 8 to 11 degrees); T5 keeps it in 15 of 39 (38%), with small selectivity. 41 of 50
+transferred networks stay bounded over 20 s of grey (flyvis's own lattice: 49).

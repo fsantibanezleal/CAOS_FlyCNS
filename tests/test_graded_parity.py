@@ -24,7 +24,7 @@ present = pytest.mark.skipif(not (EXTRACT / "responses-000" / "manifest.json").i
 def flyvis_run():
     lattice = read_compiled(EXTRACT / "lattice-000")
     responses = read_compiled(EXTRACT / "responses-000")
-    network = GradedNetwork(bias=lattice["node_bias"], time_const_s=lattice["node_time_const_s"],
+    network = GradedNetwork.from_input_index(bias=lattice["node_bias"], time_const_s=lattice["node_time_const_s"],
                             source=lattice["edge_source"], target=lattice["edge_target"],
                             weight=lattice["edge_weight"], input_index=lattice["input_index"])
     return network, responses, responses.manifest["release"]

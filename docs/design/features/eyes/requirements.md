@@ -32,6 +32,8 @@ R-207  WHEN a panorama holds a single bright spot, THE ommatidium looking closes
 
 R-208  WHERE the compiled MaleCNS and its measured geometry are present, THE right eye SHALL hold 892 columns and the
        left 879, and in each eye the dorsal-rim columns (identified from their photoreceptor subtypes, not from
-       geometry) SHALL sit higher on average than the pale and yellow columns.
+       geometry) SHALL sit higher on average than the pale and yellow columns by at least 40 degrees, with their
+       centroid within 20 degrees of straight up from the eye's centre. (Revised in 0.05.000: the first version
+       asked only that the rim sit higher, which a lattice turned 60 degrees also passed.)
        Gate: tests/test_eyes_data.py::test_malecns_eyes_match_the_release_and_the_measured_extent
 ```

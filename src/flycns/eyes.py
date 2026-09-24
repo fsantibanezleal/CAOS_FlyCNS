@@ -4,7 +4,9 @@ What is real: the set of columns of each eye and their hexagonal coordinates (fr
 photoreceptors belong to which column (compiled), and the lattice's orientation in the animal (measured here from the
 3D centres of the medulla columns and from landmark neuropils). What is modelled: each column's viewing direction and
 each ommatidium's acceptance. The model lays the measured lattice on the sphere with one inter-ommatidial angle,
-oriented by the measured axes, mirrored anterior-posterior by the first optic chiasm, and scaled so that each eye's
+mirrored anterior-posterior by the first optic chiasm, turned so that the dorsal-rim columns sit straight above the
+eye's centre (which lattice axis is vertical in the eye cannot be read from the medulla, which sits obliquely in the
+head; 0.05.000 corrected a 60-degree error here, found by the dorsal rim and by T4 motion tuning), and scaled so that each eye's
 equator spans the extent measured by micro-CT: from 10 degrees into the opposite hemisphere in front to 155 degrees
 behind (Zhao et al., Nature 646:135-142, 2025, doi:10.1038/s41586-025-09276-5).
 
@@ -202,6 +204,27 @@ def eye_plane(hexes: np.ndarray, orientation: dict) -> np.ndarray:
     return hexes.astype(np.float64) @ basis
 
 
+def orient_by_dorsal_rim(plane: np.ndarray, dorsal_rim: np.ndarray) -> tuple[np.ndarray, dict]:
+    """Rotate the lattice by the multiple of 60 degrees that puts the dorsal rim straight above the eye's centre.
+
+    The medulla sits obliquely in the head, so which hex axis runs vertically in the EYE cannot be read off the
+    medulla's orientation in the body frame. The dorsal rim can: it is the band of columns along the top edge of the
+    eye, identified by its photoreceptor subtypes, not by geometry. Rotations by multiples of 60 degrees map the ideal
+    lattice onto itself, so this chooses which lattice direction is vertical and changes nothing else (the handedness,
+    fixed by the chiasm, is kept).
+    """
+    centred = plane - plane.mean(axis=0)
+    rim = centred[dorsal_rim].mean(axis=0)
+    bearing = math.degrees(math.atan2(rim[1], rim[0]))          # (forward, up): straight up is 90 degrees
+    turns = [k * 60.0 for k in range(6)]
+    error = [abs((bearing + k - 90.0 + 180.0) % 360.0 - 180.0) for k in turns]
+    turn = turns[int(np.argmin(error))]
+    c, s = math.cos(math.radians(turn)), math.sin(math.radians(turn))
+    rotated = plane @ np.array([[c, s], [-s, c]])
+    return rotated, {"dorsal_rim_bearing_before_deg": bearing, "rotation_deg": turn,
+                     "dorsal_rim_bearing_after_deg": (bearing + turn + 180.0) % 360.0 - 180.0}
+
+
 def _directions(azimuth_deg: np.ndarray, elevation_deg: np.ndarray, side: str) -> np.ndarray:
     az, el = np.radians(azimuth_deg), np.radians(elevation_deg)
     lateral = -1.0 if side == "right" else 1.0      # the right eye looks toward -y (the fly's right)
@@ -244,8 +267,10 @@ def neighbour_table(hexes: np.ndarray, offsets: list) -> np.ndarray:
     return table
 
 
-def build_eyes(column_side: np.ndarray, column_hex: np.ndarray, column_kind: np.ndarray, geometry: dict) -> dict:
-    """Both eyes from the compiled column table and the measured geometry."""
+def build_eyes(column_side: np.ndarray, column_hex: np.ndarray, column_kind: np.ndarray, geometry: dict,
+               dorsal_rim_code: int | None = 3) -> dict:
+    """Both eyes from the compiled column table and the measured geometry. ``dorsal_rim_code`` is the compiled
+    column kind of the dorsal rim (3 in the MaleCNS compiler's table); None keeps the medulla-derived orientation."""
     landmarks = {k: np.array(v) for k, v in geometry["landmarks_um"].items()}
     axes = body_axes(landmarks)
     centres = geometry["medulla_columns_um"]
@@ -259,6 +284,9 @@ def build_eyes(column_side: np.ndarray, column_hex: np.ndarray, column_kind: np.
         xyz = np.array([c[:3] for _, c in with_centre])
         orientation = lattice_orientation(hx, xyz, axes)
         plane = eye_plane(hexes, orientation)
+        if dorsal_rim_code is not None and np.count_nonzero(column_kind[chosen] == dorsal_rim_code) >= 3:
+            plane, turned = orient_by_dorsal_rim(plane, column_kind[chosen] == dorsal_rim_code)
+            orientation = {**orientation, **turned}
         azimuth, elevation, step = place_eye(plane, side)
         eyes[side] = Eye(side=side, column_index=chosen.astype(np.int32), hexes=hexes.astype(np.int16),
                          kinds=column_kind[chosen], directions=_directions(azimuth, elevation, side),
