@@ -3,6 +3,13 @@
 All notable changes are recorded here, newest first, grouped Added / Changed / Fixed / Removed. Versions are
 `X.XX.XXX` (the `VERSION` file, the tags and this log); the manifests carry the semantic form (`0.0.0`).
 
+## [0.01.001] - 2026-09-23
+
+### Fixed
+
+- Continuous integration installed the package without the `release` extra, so the tests could not import pandas to
+  write the synthetic release, and CI failed on `develop` and `main` after 0.01.000. It now installs `.[dev,release]`.
+
 ## [0.01.000] - 2026-09-23
 
 ### Added

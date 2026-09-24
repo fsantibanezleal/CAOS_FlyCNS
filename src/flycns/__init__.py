@@ -4,4 +4,4 @@ The display version (``X.XX.XXX``) lives in the ``VERSION`` file at the reposito
 semantic form, the one the package index and ``pyproject.toml`` carry.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
