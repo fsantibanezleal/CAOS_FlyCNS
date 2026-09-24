@@ -1,6 +1,8 @@
 # flycns · software design document
 
-Written 2026-09-23, before any code. `flycns` compiles a fly connectome release into a graph a simulator can run,
+Written 2026-09-23, before any code; revised 2026-09-23 after the spiking model's measurements (U3a): section 3
+names the modules as built, section 5 states the published silencing and refractoriness exactly, and section 7
+compares whole-CNS runs in the two ways a model with two states allows. `flycns` compiles a fly connectome release into a graph a simulator can run,
 models the two compound eyes over the release's own optic-lobe columns, and simulates the whole central nervous
 system with the published neuron models, in Python and in the browser, with the two implementations held to each
 other by parity tests. Its first consumer is Destello; it is written for any consumer.
@@ -27,8 +29,10 @@ neither runs in a browser. `flycns` does, once, with tests.
 
 | Part | Language | Content |
 |---|---|---|
-| `flycns.release` | Python | release adapters (MaleCNS v1.0), SHA-256 locked sources, the compiled format writer |
-| `flycns.graph` | Python | the compiled graph: neuron table, signed CSR, partitions (optic lobe per side, central brain, nerve cord), null-model generators |
+| `flycns.release` | Python | release adapters (MaleCNS v1.0), SHA-256 locked sources |
+| `flycns.compiled` | Python | the compiled format: writer and hash-checked reader of the neuron table, signed CSR and partitions |
+| `flycns.nulls` | Python | null-model generators: degree-preserving rewiring, size-matched random graphs, sign shuffles |
+| `flycns.rng` | Python | the counter-based generator (MurmurHash3_x86_32) shared with TypeScript and WGSL |
 | `flycns.eyes` | Python | per-eye column tables, modelled viewing directions, ommatidium sampling of a scene, photoreceptor transduction |
 | `flycns.dynamics` | Python (NumPy reference, PyTorch GPU) | LIF (Shiu), graded optic lobe (flyvis-style), the graded-to-spiking bridge, stabilisers, stimulation and silencing |
 | `flycns.record` | Python | spike and graded-activity recordings in the shared binary format |
@@ -61,8 +65,10 @@ Everything a simulation needs is in the directory; a consumer never reads the re
 - **LIF (Shiu et al. 2024, `model.py`):** `dv/dt = (v0 - v + g)/t_mbr`, `dg/dt = -g/tau`, threshold `v > v_th`, reset
   `v = v_rst, g = 0`, refractory `t_rfc`, a presynaptic spike adds `w = sign x count x w_syn` to `g` after `t_dly`.
   v0 = v_rst = -52 mV, v_th = -45 mV, t_mbr = 20 ms, tau = 5 ms, t_rfc = 2.2 ms, t_dly = 1.8 ms, w_syn = 0.275 mV,
-  dt = 0.1 ms. Activation is Poisson input at a rate with weight `w_syn x f_poi` (f_poi = 250); silencing zeroes a
-  neuron's synapses both ways.
+  dt = 0.1 ms. Activation is Poisson input at a rate with weight `w_syn x f_poi` (f_poi = 250), and activated
+  neurons have no refractory period. Silencing zeroes a neuron's outgoing synapses, as the published `silence()`
+  does; the neuron still receives input and spikes. Input reaching a refractory neuron is discarded, as Brian2 does
+  for variables declared `(unless refractory)`.
 - **Graded optic lobe (Lappalainen et al. 2024 form):** non-spiking leaky voltage per neuron with a per-type time
   constant and resting potential, presynaptic output rectified, synaptic weight = sign x count x unitary strength per
   type pair, parameters transferred from the published ensemble; types outside the ensemble receive documented
@@ -72,8 +78,9 @@ Everything a simulation needs is in the directory; a consumer never reads the re
   has one).
 - **Stabilisers (optional, off in the published-model mode):** spike-frequency adaptation, a per-connection
   saturation cap, fan-in normalisation. Each carries its source and is reported when on.
-- **Randomness is counter-based.** Poisson inputs draw from a hash of (seed, neuron, tick), identical in Python, WGSL
-  and the fallback, so the same seed gives the same input spikes everywhere.
+- **Randomness is counter-based.** Poisson inputs draw from MurmurHash3_x86_32 of the key (neuron, tick) seeded with
+  the run's seed, identical in Python, WGSL and the fallback, so the same seed gives the same input spikes
+  everywhere.
 
 ## 6. Determinism
 
@@ -86,11 +93,17 @@ CPU paths. GPU paths are compared by tolerance (section 7), never claimed bit-id
 | Pair | Tolerance |
 |---|---|
 | Python reference vs a literal Brian2 transcription of `model.py`, small circuits | identical spike times and neuron indices |
-| NumPy reference vs PyTorch GPU, whole CNS, 200 ms | active-neuron Jaccard >= 0.99 and per-neuron rate correlation >= 0.99 |
-| Python reference vs the TypeScript fallback, fixed seeds | identical spike trains on the parity circuits; whole-CNS rate correlation >= 0.99 |
-| Python reference vs WebGPU, whole CNS | active-neuron Jaccard >= 0.98 and rate correlation >= 0.98 |
+| NumPy reference vs PyTorch GPU, whole CNS | moderate drive, 200 ms: active-neuron Jaccard >= 0.99 and per-neuron count correlation >= 0.99; strong drive, 500 ms: five GPU trials against five independent reference trials correlate at least at the 5th percentile of the reference against itself over the 126 splits of ten seeds |
+| Python reference vs the TypeScript fallback, fixed seeds | identical spike trains on the parity circuits; whole CNS as the GPU row |
+| Python reference vs WebGPU, whole CNS | as the GPU row, with Jaccard and correlation >= 0.98 in the moderate window |
 
 A browser path that fails its tolerance is not shipped as the live engine.
+
+Why two regimes (measured 2026-09-23, `docs/models/02_lif.md`): on the whole MaleCNS the published model has two
+states, and a run switches from the low one (about 8,000 spikes per 50 ms under the moderate drive) into the high one
+(about 44,000) at a random moment. Float32 and float64 runs share every input event but part at the first threshold
+the two arithmetics decide differently, so beyond that point they are compared as samples of one process, never spike
+by spike.
 
 ## 8. Risks
 

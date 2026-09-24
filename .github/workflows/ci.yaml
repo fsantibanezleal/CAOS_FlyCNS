@@ -1,8 +1,9 @@
 name: ci
 
 # Trunk plus manual only: no pull_request trigger, no schedule, no feature branches. This is a library, so its
-# unit tests are cheap (seconds, numpy only) and run here; tests that need the release files, a GPU or brian2 are
-# marked and skip on the runner, and -rs lists every skip so a skipped gate is never read as a pass.
+# unit tests are cheap (seconds, numpy only) and run here, with the Brian2 parity transcription (seconds); tests that
+# need the release files or a GPU are marked and skip on the runner, and -rs lists every skip so a skipped gate is
+# never read as a pass.
 on:
   push:
     branches: [develop, main]
@@ -32,7 +33,7 @@ jobs:
       - name: Install the library and its dev tools
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -e ".[dev,release]"
+          python -m pip install -e ".[dev,release,parity]"
       - name: Lint
         run: python -m ruff check .
       - name: Unit tests
