@@ -24,8 +24,26 @@ known to fall short.
 
 ## Status
 
-Version 0.00.000: the design (`docs/design/SDD.md`) and the repository scaffold. The MaleCNS compiler is the next
-unit; this README lists capabilities only as they land.
+Version 0.01.000: the MaleCNS v1.0 compiler and the compiled format. The eye model is the next unit; this README lists
+capabilities only as they land.
+
+## Compile MaleCNS v1.0
+
+Download the four tables listed in [`docs/releases/01_malecns-v1.md`](docs/releases/01_malecns-v1.md) into one
+folder, then:
+
+```python
+from pathlib import Path
+from flycns.release import compile_malecns_v1
+from flycns.compiled import read_compiled
+
+compile_malecns_v1(Path("malecns-tables"), Path("compiled/malecns-v1.0"), progress=print)
+graph = read_compiled(Path("compiled/malecns-v1.0"))      # every array verified against its SHA-256
+print(graph.n_neurons, graph.n_edges, graph.counts["columns"])
+```
+
+A table whose SHA-256 differs from the locked value is refused. Compilation streams the 13 GB synapse table in record
+batches and takes a few minutes on a desktop.
 
 ## Install (development)
 
