@@ -55,7 +55,8 @@ def _dtype_name(array: np.ndarray) -> str:
     raise CompiledError(f"dtype {array.dtype} is not allowed in a compiled directory")
 
 
-def write_compiled(directory: Path, arrays: dict[str, np.ndarray], meta: dict[str, Any]) -> dict[str, Any]:
+def write_compiled(directory: Path, arrays: dict[str, np.ndarray], meta: dict[str, Any],
+                   schema: str = SCHEMA) -> dict[str, Any]:
     """Write ``arrays`` and a manifest into ``directory``; return the manifest.
 
     ``meta`` carries the release, sources, counts and string tables; it is stored as given under the manifest's
@@ -76,7 +77,7 @@ def write_compiled(directory: Path, arrays: dict[str, np.ndarray], meta: dict[st
              "sha256": sha256_bytes(data)}
         )
     manifest = {
-        "schema": SCHEMA,
+        "schema": schema,
         "release": meta.get("release", {}),
         "sources": meta.get("sources", []),
         "counts": meta.get("counts", {}),
@@ -115,7 +116,7 @@ class Compiled:
         return self.arrays[name]
 
 
-def read_compiled(directory: Path, verify: bool = True) -> Compiled:
+def read_compiled(directory: Path, verify: bool = True, schema: str = SCHEMA) -> Compiled:
     """Read a compiled directory, checking every array against the manifest.
 
     With ``verify`` (the default) each file's SHA-256 is recomputed; any difference, a missing file or a size that
@@ -126,8 +127,8 @@ def read_compiled(directory: Path, verify: bool = True) -> Compiled:
     if not manifest_path.is_file():
         raise CompiledError(f"{directory} holds no manifest.json")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    if manifest.get("schema") != SCHEMA:
-        raise CompiledError(f"schema {manifest.get('schema')!r} is not {SCHEMA!r}")
+    if manifest.get("schema") != schema:
+        raise CompiledError(f"schema {manifest.get('schema')!r} is not {schema!r}")
     arrays: dict[str, np.ndarray] = {}
     for entry in manifest["arrays"]:
         path = directory / entry["file"]

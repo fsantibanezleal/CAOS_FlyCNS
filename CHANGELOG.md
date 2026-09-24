@@ -3,7 +3,39 @@
 All notable changes are recorded here, newest first, grouped Added / Changed / Fixed / Removed. Versions are
 `X.XX.XXX` (the `VERSION` file, the tags and this log); the manifests carry the semantic form (`0.0.0`).
 
-## [0.02.000] - 2026-09-24
+## [0.03.000] - 2026-09-23
+
+### Added
+
+- The published whole-brain spiking model (`flycns.dynamics`): the leaky integrate-and-fire neuron of Shiu et al.
+  (*Nature* 634:210-219, 2024) with its published constants, integrated exactly, in Brian2's step order, on a NumPy
+  reference engine (float64) and a PyTorch engine (float32, GPU); Poisson activation with the published weight and no
+  refractory period for activated neurons; the published silencing (outgoing synapses only), through the weights or
+  through the drive.
+- A counter-based generator (`flycns.rng`): MurmurHash3_x86_32 of (neuron, step) seeded by the run's seed, so every
+  implementation reproduces the same input events; checked against the independent `mmh3` package and pinned by
+  five vectors for the TypeScript and WGSL implementations.
+- Null graphs (`flycns.nulls`): degree-preserving rewiring within partition blocks, with a collision repair that
+  never creates a collision (all 306,510 collisions repaired on MaleCNS v1.0); size-matched random graphs per block;
+  sign shuffles.
+- Recordings (`flycns.record`): spikes as a CSR over steps plus chosen voltage traces, hash-checked.
+- Tests: identical spike trains against a literal Brian2 transcription of the published program on three circuits
+  (run in continuous integration, which now installs Brian2); activation, the generator, silencing, recordings and
+  the null graphs on small graphs; on the whole MaleCNS, the GPU engine against the reference and the exact
+  degree-preserving null.
+- Wiki: the spiking model page, with the equations, the step diagram, what the model does on the whole male CNS
+  (two states, the switch carried by the mushroom-body loop), the agreement criteria and the null graphs.
+
+### Changed
+
+- The design document names the modules as built, states the published silencing and refractoriness exactly, and
+  compares whole-CNS runs in the two ways a model with two states allows.
+
+### Fixed
+
+- The date of 0.02.000, which was written in UTC; releases are dated in local time.
+
+## [0.02.000] - 2026-09-23
 
 ### Added
 

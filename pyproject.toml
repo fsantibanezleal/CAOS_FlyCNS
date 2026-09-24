@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "flycns"
-version = "0.2.0"
+version = "0.3.0"
 description = "Compile fly connectome releases (MaleCNS v1.0) into simulation-ready graphs with two-eye column maps, and simulate the whole central nervous system (graded optic lobe plus spiking LIF) with parity between Python and the browser."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -31,7 +31,8 @@ release = ["pyarrow>=15", "pandas>=2.1"]
 gpu = ["torch>=2.3"]
 # the literal Brian2 transcription used by the parity tests
 parity = ["brian2>=2.7"]
-dev = ["pytest>=8.0", "ruff>=0.6"]
+# mmh3 is the independent MurmurHash3 oracle for the counter-based generator
+dev = ["pytest>=8.0", "ruff>=0.6", "mmh3>=4.0"]
 
 [project.urls]
 Homepage = "https://github.com/fsantibanezleal/CAOS_FlyCNS"
