@@ -12,34 +12,9 @@ import numpy as np
 import pytest
 
 from flycns.dynamics import Drive, LIFParams, LIFReference
+from flycns.parity import circuit
 
 brian2 = pytest.importorskip("brian2")
-
-
-def circuit(seed: int, n: int = 40, edges: int = 220):
-    rng = np.random.default_rng(seed)
-    pairs = set()
-    while len(pairs) < edges:
-        a, b = rng.integers(n, size=2)
-        if a != b:
-            pairs.add((int(a), int(b)))
-    pairs = sorted(pairs)
-    pre = np.array([p for p, _ in pairs])
-    post = np.array([q for _, q in pairs])
-    counts = rng.integers(1, 40, size=len(pairs))
-    signs = np.where(rng.random(n) < 0.7, 1, -1)
-    weights_mv = signs[pre] * counts * 0.275
-    indptr = np.zeros(n + 1, dtype=np.int64)
-    np.cumsum(np.bincount(pre, minlength=n), out=indptr[1:])
-    # fixed drive: inputs 0-5 get strong events (one crosses threshold) and weaker subthreshold ones
-    events: dict[int, tuple[list, list]] = {}
-    for neuron in range(6):
-        for step in np.sort(rng.choice(2000, size=30, replace=False)):
-            dv = 68.75 if rng.random() < 0.6 else float(rng.uniform(1.0, 6.0))
-            events.setdefault(int(step), ([], []))
-            events[int(step)][0].append(neuron)
-            events[int(step)][1].append(dv)
-    return n, pre, post, weights_mv, indptr, events
 
 
 def brian2_run(n, pre, post, weights_mv, events, steps):

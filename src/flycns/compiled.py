@@ -29,6 +29,7 @@ DTYPES = {
     "uint32": np.uint32,
     "int64": np.int64,
     "float32": np.float32,
+    "float64": np.float64,      # engine bundles only: the exact weights the browser must read as the reference does
 }
 
 

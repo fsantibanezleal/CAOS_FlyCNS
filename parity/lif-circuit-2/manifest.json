@@ -1,0 +1,140 @@
+{
+  "arrays": [
+    {
+      "bytes": 0,
+      "dtype": "int64",
+      "file": "drive_activate_neuron.bin",
+      "name": "drive_activate_neuron",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    },
+    {
+      "bytes": 0,
+      "dtype": "float64",
+      "file": "drive_activate_rate_hz.bin",
+      "name": "drive_activate_rate_hz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    },
+    {
+      "bytes": 1440,
+      "dtype": "float64",
+      "file": "drive_event_dv_mv.bin",
+      "name": "drive_event_dv_mv",
+      "sha256": "d6110158f8f18758ccd44fb84da69f87475546164549c8be0cfc637c2279bfab",
+      "shape": [
+        180
+      ]
+    },
+    {
+      "bytes": 1440,
+      "dtype": "int64",
+      "file": "drive_event_neuron.bin",
+      "name": "drive_event_neuron",
+      "sha256": "777ad4285c9e0e563190e243536cfef9c09311ced06f6deae14e654ed28b9915",
+      "shape": [
+        180
+      ]
+    },
+    {
+      "bytes": 1440,
+      "dtype": "int64",
+      "file": "drive_event_step.bin",
+      "name": "drive_event_step",
+      "sha256": "98043cf61d7f179a1d19d79d2fd942b397a838474fbe8fa680e4809a1665339a",
+      "shape": [
+        180
+      ]
+    },
+    {
+      "bytes": 0,
+      "dtype": "int64",
+      "file": "drive_silenced.bin",
+      "name": "drive_silenced",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    },
+    {
+      "bytes": 880,
+      "dtype": "int32",
+      "file": "lif_indices.bin",
+      "name": "lif_indices",
+      "sha256": "e6a0444c81ccd6b3e4008f687e867d95fd2e57e31e41d425f071c6483c8e3ac8",
+      "shape": [
+        220
+      ]
+    },
+    {
+      "bytes": 328,
+      "dtype": "int64",
+      "file": "lif_indptr.bin",
+      "name": "lif_indptr",
+      "sha256": "e0aaf1070b22db24bc71269750874d8236523f9c3a06b2e71a7eb3f52a31939c",
+      "shape": [
+        41
+      ]
+    },
+    {
+      "bytes": 1760,
+      "dtype": "float64",
+      "file": "lif_weight_mv.bin",
+      "name": "lif_weight_mv",
+      "sha256": "ff9ba6f29454c7262feaab168be183f59982524e81e81958d4a678cb7b40e2f5",
+      "shape": [
+        220
+      ]
+    },
+    {
+      "bytes": 24,
+      "dtype": "int64",
+      "file": "trace_neurons.bin",
+      "name": "trace_neurons",
+      "sha256": "01ca5828431a0bfbaa09e9da0e5179f51999fad715bb9f7b2b14a6bb200b1f40",
+      "shape": [
+        3
+      ]
+    }
+  ],
+  "counts": {},
+  "release": {
+    "engine": "lif",
+    "lif": {
+      "adaptation_decay": 0.9995001249791693,
+      "adaptation_mv": 0.0,
+      "decay_a": 0.9950124791926823,
+      "decay_b": 0.9801986733067553,
+      "decay_c": 0.004937935295309022,
+      "delay_steps": 18,
+      "dt_ms": 0.1,
+      "f_poi": 250.0,
+      "refractory_steps": 22,
+      "t_dly_ms": 1.8,
+      "t_mbr_ms": 20.0,
+      "t_rfc_ms": 2.2,
+      "tau_adaptation_ms": 200.0,
+      "tau_ms": 5.0,
+      "v0_mv": -52.0,
+      "v_rst_mv": -52.0,
+      "v_th_mv": -45.0,
+      "w_event_mv": 68.75,
+      "w_syn_mv": 0.275
+    },
+    "n_neurons": 40,
+    "run": {
+      "grey": 0.5,
+      "modulated_steps": 0,
+      "seed": 2,
+      "steps": 2000,
+      "t_pre_s": 1.0
+    }
+  },
+  "schema": "flycns.scenario/1",
+  "sources": [],
+  "strings": {}
+}
