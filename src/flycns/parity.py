@@ -23,6 +23,27 @@ from .bundle import (
 )
 from .dynamics.graded import GradedNetwork
 from .dynamics.lif import Drive, LIFParams
+from .rng import event_threshold, hash3
+
+VECTORS_SCHEMA = "flycns.vectors/1"
+
+
+def hash_vectors(directory, count: int = 10000) -> dict:
+    """The pinned hash vectors and ``count`` random keys with their hashes and Poisson thresholds at dt = 0.1 ms,
+    for the TypeScript and WGSL implementations to reproduce."""
+    from .compiled import write_compiled
+
+    rng = np.random.default_rng(2024)
+    pinned = np.array([(0, 0, 0), (1, 2, 3), (0xDEADBEEF, 166699, 1000000), (0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF),
+                       (42, 12345, 67890)], dtype=np.uint32)
+    keys = np.concatenate([pinned, rng.integers(0, 2**32, size=(count, 3), dtype=np.uint64).astype(np.uint32)])
+    seed, neuron, step = keys.T
+    hashes = np.array([hash3(int(s), np.array([n], dtype=np.uint32), int(t))[0] for s, n, t in keys], dtype=np.uint32)
+    rates = np.concatenate([[0.0, 150.0, 400.0, 10000.0, 1e7], rng.uniform(0.0, 2000.0, size=count)])
+    thresholds = np.array([event_threshold(float(r), 0.1 / 1000.0) for r in rates], dtype=np.int64)
+    return write_compiled(directory, {"seed": seed, "neuron": neuron, "step": step, "hash": hashes,
+                                      "rate_hz": rates, "threshold": thresholds},
+                          {"counts": {"keys": len(keys)}}, schema=VECTORS_SCHEMA)
 
 
 def circuit(seed: int, n: int = 40, edges: int = 220):

@@ -14,11 +14,15 @@ import sys
 from pathlib import Path
 
 from flycns.bundle import run_reference, write_expected, write_scenario
-from flycns.parity import SCENARIOS
+from flycns.parity import SCENARIOS, hash_vectors
 
 
 def main(out: Path) -> None:
     out.mkdir(parents=True, exist_ok=True)
+    if (out / "hash-vectors").exists():
+        shutil.rmtree(out / "hash-vectors")
+    hash_vectors(out / "hash-vectors")
+    print("hash-vectors: 10,005 keys")
     for name, build in SCENARIOS.items():
         target = out / name
         if target.exists():

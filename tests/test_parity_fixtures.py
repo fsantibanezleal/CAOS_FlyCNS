@@ -13,7 +13,7 @@ from pathlib import Path
 import pytest
 
 from flycns.bundle import read_scenario, run_reference, write_expected, write_scenario
-from flycns.parity import SCENARIOS
+from flycns.parity import SCENARIOS, hash_vectors
 
 PARITY = Path(__file__).resolve().parents[1] / "parity"
 
@@ -35,3 +35,8 @@ def test_committed_fixtures_are_the_references_current_output(name, tmp_path):
     write_expected(tmp_path / "expected", outputs)
     assert hashes(tmp_path / "expected") == hashes(committed / "expected")
     assert outputs and all(v.size > 0 for k, v in outputs.items() if k in ("neuron_index", "activity", "graded"))
+
+
+def test_hash_vectors_are_current(tmp_path):
+    hash_vectors(tmp_path / "hash-vectors")
+    assert hashes(tmp_path / "hash-vectors") == hashes(PARITY / "hash-vectors")

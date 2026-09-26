@@ -1,0 +1,71 @@
+{
+  "arrays": [
+    {
+      "bytes": 40020,
+      "dtype": "uint32",
+      "file": "hash.bin",
+      "name": "hash",
+      "sha256": "c6c18a04373404e3dd11533ca6ae5efea05cb95853d30262e7a5e95b3f329014",
+      "shape": [
+        10005
+      ]
+    },
+    {
+      "bytes": 40020,
+      "dtype": "uint32",
+      "file": "neuron.bin",
+      "name": "neuron",
+      "sha256": "db36d8ed20c133a587c1ced66a27af7ab389bc8a13475bc0c68af96b723937d8",
+      "shape": [
+        10005
+      ]
+    },
+    {
+      "bytes": 80040,
+      "dtype": "float64",
+      "file": "rate_hz.bin",
+      "name": "rate_hz",
+      "sha256": "baa6838f8fa027dc4c1b7612b21218c11f2ee480ec771025828c67dabdc87963",
+      "shape": [
+        10005
+      ]
+    },
+    {
+      "bytes": 40020,
+      "dtype": "uint32",
+      "file": "seed.bin",
+      "name": "seed",
+      "sha256": "a1563503ecdcbac0d810b33d354bcb3cccc42fced9eb3ee0b7343a1f8939623a",
+      "shape": [
+        10005
+      ]
+    },
+    {
+      "bytes": 40020,
+      "dtype": "uint32",
+      "file": "step.bin",
+      "name": "step",
+      "sha256": "d024d3cf7764f6a1f778297cedd8dbeb6d4e84ad9a207f877b3423ece6ad565e",
+      "shape": [
+        10005
+      ]
+    },
+    {
+      "bytes": 80040,
+      "dtype": "int64",
+      "file": "threshold.bin",
+      "name": "threshold",
+      "sha256": "57e89fa997e27761675850972204e12299d08a3b73126dd6695f6f06966819ba",
+      "shape": [
+        10005
+      ]
+    }
+  ],
+  "counts": {
+    "keys": 10005
+  },
+  "release": {},
+  "schema": "flycns.vectors/1",
+  "sources": [],
+  "strings": {}
+}
