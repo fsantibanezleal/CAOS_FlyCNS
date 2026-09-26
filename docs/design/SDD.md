@@ -125,7 +125,7 @@ by spike.
 | Float nondeterminism on GPUs | fixed-point accumulation in the browser; tolerances stated; no bit-identity claims on GPU |
 | Memory: 25.6 M synapses in a browser | uint16 counts and int32 targets (about 150 MB raw), sharded; partition-first loading |
 | flyvis parameter transfer covers only its 64 types | coverage reported per type; defaults documented |
-| Publishing needs account actions | PyPI trusted publisher and an npm token requested at release; consumers pin a git tag meanwhile |
+| Publishing needs account actions | PyPI trusted publisher registered 2026-09-26; flycns 0.6.0 published from release v0.06.000 the same day. The npm package is published with the browser engine, never as a version-only stub |
 
 ## 9. Requirements in force at scaffolding
 
