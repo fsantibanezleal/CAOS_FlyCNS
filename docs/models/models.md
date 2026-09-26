@@ -12,3 +12,5 @@ model gives on MaleCNS v1.0.
    real wiring then computes: T4 and T5 direction selectivity through the modelled eyes, across all 50 networks.
 5. [`05_whole_cns.md`](05_whole_cns.md): the whole CNS coupled, engines E1 to E4: the bridge and the feedback, a
    flash through each engine, and what the stabilisers do.
+6. [`06_browser.md`](06_browser.md): the browser engine: the CPU engine that reproduces the reference bit for bit,
+   the WebGPU kernels and their fixed-point delivery, and what both give on the parity fixtures and the whole CNS.

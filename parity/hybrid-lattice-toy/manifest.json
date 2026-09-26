@@ -1,0 +1,511 @@
+{
+  "arrays": [
+    {
+      "bytes": 4,
+      "dtype": "int32",
+      "file": "bridge_source.bin",
+      "name": "bridge_source",
+      "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "bytes": 4,
+      "dtype": "int32",
+      "file": "bridge_target.bin",
+      "name": "bridge_target",
+      "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "bytes": 8,
+      "dtype": "float64",
+      "file": "bridge_weight.bin",
+      "name": "bridge_weight",
+      "sha256": "60852013945e8f498f6da0fc1e309c7756b12c03bd5b5008e419711809e1564c",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "bytes": 8,
+      "dtype": "int64",
+      "file": "drive_activate_neuron.bin",
+      "name": "drive_activate_neuron",
+      "sha256": "d86e8112f3c4c4442126f8e9f44f16867da487f29052bf91b810457db34209a4",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "bytes": 8,
+      "dtype": "float64",
+      "file": "drive_activate_rate_hz.bin",
+      "name": "drive_activate_rate_hz",
+      "sha256": "dfa3d204e7b87f4b013ab1df60c206160138f6a9437d8d6ba73fec3b0ff74a64",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "bytes": 0,
+      "dtype": "float64",
+      "file": "drive_event_dv_mv.bin",
+      "name": "drive_event_dv_mv",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    },
+    {
+      "bytes": 0,
+      "dtype": "int64",
+      "file": "drive_event_neuron.bin",
+      "name": "drive_event_neuron",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    },
+    {
+      "bytes": 0,
+      "dtype": "int64",
+      "file": "drive_event_step.bin",
+      "name": "drive_event_step",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    },
+    {
+      "bytes": 0,
+      "dtype": "int64",
+      "file": "drive_silenced.bin",
+      "name": "drive_silenced",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    },
+    {
+      "bytes": 4,
+      "dtype": "int32",
+      "file": "feedback_source.bin",
+      "name": "feedback_source",
+      "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "bytes": 4,
+      "dtype": "int32",
+      "file": "feedback_target.bin",
+      "name": "feedback_target",
+      "sha256": "7aa8ca4a02506da9133d8f889678b76f716ce45d02e22fdb7b70a15e56a0eff8",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "bytes": 8,
+      "dtype": "float64",
+      "file": "feedback_weight.bin",
+      "name": "feedback_weight",
+      "sha256": "d8f8c3b9e623484f54058a493c5e80a68b5a004431da8851df70007a71d32e6e",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "bytes": 64,
+      "dtype": "float64",
+      "file": "graded_bias.bin",
+      "name": "graded_bias",
+      "sha256": "f85595944014d82637f7f3dd08f7ecdc60394b864470001d0850bc651b233492",
+      "shape": [
+        8
+      ]
+    },
+    {
+      "bytes": 24,
+      "dtype": "int32",
+      "file": "graded_input_column.bin",
+      "name": "graded_input_column",
+      "sha256": "9d908ecfb6b256def8b49a7c504e6c889c4b0e41fe6ce3e01863dd7b61a20aa0",
+      "shape": [
+        6
+      ]
+    },
+    {
+      "bytes": 24,
+      "dtype": "int32",
+      "file": "graded_input_neuron.bin",
+      "name": "graded_input_neuron",
+      "sha256": "cd9a54ed1f18bf97db08914e280ea7349e11ca2c4885a4d8052552ceba84208d",
+      "shape": [
+        6
+      ]
+    },
+    {
+      "bytes": 28,
+      "dtype": "int32",
+      "file": "graded_source.bin",
+      "name": "graded_source",
+      "sha256": "e1a613aa4b331588d97b5feef1faabe8e8138d8c488ee9122b8533bfdda3c189",
+      "shape": [
+        7
+      ]
+    },
+    {
+      "bytes": 28,
+      "dtype": "int32",
+      "file": "graded_target.bin",
+      "name": "graded_target",
+      "sha256": "3a867cd58be3fe045ccd2c57b77f2c139fb128a443e3909102292d466b36a1dc",
+      "shape": [
+        7
+      ]
+    },
+    {
+      "bytes": 64,
+      "dtype": "float64",
+      "file": "graded_time_const_s.bin",
+      "name": "graded_time_const_s",
+      "sha256": "889becb87e62465363da2c286b15598ee822efccb8cfa10d51482f8bf36eaa15",
+      "shape": [
+        8
+      ]
+    },
+    {
+      "bytes": 56,
+      "dtype": "float64",
+      "file": "graded_weight.bin",
+      "name": "graded_weight",
+      "sha256": "3fb17f1af754e3d13378f5d1a71a29042deb5d9ec337dfc58e172f877f753296",
+      "shape": [
+        7
+      ]
+    },
+    {
+      "bytes": 96,
+      "dtype": "float64",
+      "file": "lattice0_bias.bin",
+      "name": "lattice0_bias",
+      "sha256": "3cf088ef190ffea3db6eb41d628f7403c67d0e2620a04982e029138527cced62",
+      "shape": [
+        12
+      ]
+    },
+    {
+      "bytes": 12,
+      "dtype": "int32",
+      "file": "lattice0_input_column.bin",
+      "name": "lattice0_input_column",
+      "sha256": "ad5dc1478de06a4c2728ea528bd9361a4b945e92a414bf4d180cedaaeaa5f4cc",
+      "shape": [
+        3
+      ]
+    },
+    {
+      "bytes": 12,
+      "dtype": "int32",
+      "file": "lattice0_input_neuron.bin",
+      "name": "lattice0_input_neuron",
+      "sha256": "ad5dc1478de06a4c2728ea528bd9361a4b945e92a414bf4d180cedaaeaa5f4cc",
+      "shape": [
+        3
+      ]
+    },
+    {
+      "bytes": 96,
+      "dtype": "int32",
+      "file": "lattice0_source.bin",
+      "name": "lattice0_source",
+      "sha256": "2d72c628e67ede43b42686b456beb9d534fb6dd51393fd9765960d863e3a6344",
+      "shape": [
+        24
+      ]
+    },
+    {
+      "bytes": 96,
+      "dtype": "int32",
+      "file": "lattice0_target.bin",
+      "name": "lattice0_target",
+      "sha256": "0610f23a092efb2d90f1565735ab7ed74f2508720cdfe4ac41e4356bbe459deb",
+      "shape": [
+        24
+      ]
+    },
+    {
+      "bytes": 96,
+      "dtype": "float64",
+      "file": "lattice0_time_const_s.bin",
+      "name": "lattice0_time_const_s",
+      "sha256": "8e5d9a73551172da62b94850c9b499f6f4ab32547e59d741af573e43a4b75f28",
+      "shape": [
+        12
+      ]
+    },
+    {
+      "bytes": 192,
+      "dtype": "float64",
+      "file": "lattice0_weight.bin",
+      "name": "lattice0_weight",
+      "sha256": "9fb9db2f9bfbc1488dc0d3da54c585072bee8d76c6b7e4c36190a50d7c615718",
+      "shape": [
+        24
+      ]
+    },
+    {
+      "bytes": 96,
+      "dtype": "float64",
+      "file": "lattice1_bias.bin",
+      "name": "lattice1_bias",
+      "sha256": "46df760dc95b2c1c9f8b848218e69e4b9d946b45b49c5396580e8de40fe4dbc6",
+      "shape": [
+        12
+      ]
+    },
+    {
+      "bytes": 12,
+      "dtype": "int32",
+      "file": "lattice1_input_column.bin",
+      "name": "lattice1_input_column",
+      "sha256": "ad5dc1478de06a4c2728ea528bd9361a4b945e92a414bf4d180cedaaeaa5f4cc",
+      "shape": [
+        3
+      ]
+    },
+    {
+      "bytes": 12,
+      "dtype": "int32",
+      "file": "lattice1_input_neuron.bin",
+      "name": "lattice1_input_neuron",
+      "sha256": "ad5dc1478de06a4c2728ea528bd9361a4b945e92a414bf4d180cedaaeaa5f4cc",
+      "shape": [
+        3
+      ]
+    },
+    {
+      "bytes": 96,
+      "dtype": "int32",
+      "file": "lattice1_source.bin",
+      "name": "lattice1_source",
+      "sha256": "a4778dfb2e2c61fc9b76be2b97cd713aa49fa1dbf1fd201ab9bdef704f073f14",
+      "shape": [
+        24
+      ]
+    },
+    {
+      "bytes": 96,
+      "dtype": "int32",
+      "file": "lattice1_target.bin",
+      "name": "lattice1_target",
+      "sha256": "c8ed4ebed0fe67e08fa2445eebaaa4784ee6a987dcc6d9a369d1018253cc4057",
+      "shape": [
+        24
+      ]
+    },
+    {
+      "bytes": 96,
+      "dtype": "float64",
+      "file": "lattice1_time_const_s.bin",
+      "name": "lattice1_time_const_s",
+      "sha256": "15bd0eec963051b4f14eeb06254c24b3bf3415ef8a5d9032108e86545095a3fe",
+      "shape": [
+        12
+      ]
+    },
+    {
+      "bytes": 192,
+      "dtype": "float64",
+      "file": "lattice1_weight.bin",
+      "name": "lattice1_weight",
+      "sha256": "73aa5d06f77b295751ac0009e4d5b3904f168935e0569bdcbe5a324eeb4274d8",
+      "shape": [
+        24
+      ]
+    },
+    {
+      "bytes": 4,
+      "dtype": "int32",
+      "file": "lif_indices.bin",
+      "name": "lif_indices",
+      "sha256": "67abdd721024f0ff4e0b3f4c2fc13bc5bad42d0b7851d456d88d203d15aaa450",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "bytes": 32,
+      "dtype": "int64",
+      "file": "lif_indptr.bin",
+      "name": "lif_indptr",
+      "sha256": "97e2b8b640d13af1681608bb897c3ada8d220e80e2e023623f1021f958c6345b",
+      "shape": [
+        4
+      ]
+    },
+    {
+      "bytes": 8,
+      "dtype": "float64",
+      "file": "lif_weight_mv.bin",
+      "name": "lif_weight_mv",
+      "sha256": "d44948f8fe5a5d575c4c478dd6263686f5dfccf2f4c117bd915a14b05b12b4f4",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "bytes": 32,
+      "dtype": "int64",
+      "file": "map_indptr.bin",
+      "name": "map_indptr",
+      "sha256": "891842c6e3022e664c7967fb067425d7290a17ef0a106ee7ec79073d5d255ce3",
+      "shape": [
+        4
+      ]
+    },
+    {
+      "bytes": 24,
+      "dtype": "int32",
+      "file": "map_node.bin",
+      "name": "map_node",
+      "sha256": "8411bda61ee3ac5c37f8f43721f300244593faf30eaf549cd62b6d63beffd50f",
+      "shape": [
+        6
+      ]
+    },
+    {
+      "bytes": 3,
+      "dtype": "uint8",
+      "file": "map_side.bin",
+      "name": "map_side",
+      "sha256": "faee935763044f124d7526755a5058a33f9402a595994d59eddd4be8546ff201",
+      "shape": [
+        3
+      ]
+    },
+    {
+      "bytes": 12,
+      "dtype": "int32",
+      "file": "map_unit.bin",
+      "name": "map_unit",
+      "sha256": "f5f92c27efe3d9952fbf28a608b613950b3263b3ba4e4ee402b090f599ce6b90",
+      "shape": [
+        3
+      ]
+    },
+    {
+      "bytes": 24,
+      "dtype": "float32",
+      "file": "map_weight.bin",
+      "name": "map_weight",
+      "sha256": "c9942e4e054fd03cb8eed48600d001d6de10b653d0ed8ec5f9ee3886fb9243cb",
+      "shape": [
+        6
+      ]
+    },
+    {
+      "bytes": 64,
+      "dtype": "int64",
+      "file": "record_graded.bin",
+      "name": "record_graded",
+      "sha256": "fece8d601cd4c9020e24f9e4a47feedefb2bceff5e9798d8056aea8700052eaa",
+      "shape": [
+        8
+      ]
+    },
+    {
+      "bytes": 24,
+      "dtype": "int64",
+      "file": "spiking_neuron.bin",
+      "name": "spiking_neuron",
+      "sha256": "f5f38eb8784416cdb1fd95879adbeb761142dfe71fa10d141b69bd93dc03a33d",
+      "shape": [
+        3
+      ]
+    },
+    {
+      "bytes": 4800,
+      "dtype": "float64",
+      "file": "stimulus_intensity.bin",
+      "name": "stimulus_intensity",
+      "sha256": "8c2a0e15a8cbe5f9149c038daed82158cf095dc5b051130d786855f9ece23120",
+      "shape": [
+        100,
+        2,
+        3
+      ]
+    },
+    {
+      "bytes": 24,
+      "dtype": "int64",
+      "file": "trace_neurons.bin",
+      "name": "trace_neurons",
+      "sha256": "ab25350e3e65efebe24584461683ecda68725576e825e550038b90e7b1479946",
+      "shape": [
+        3
+      ]
+    }
+  ],
+  "counts": {},
+  "release": {
+    "engine": "hybrid",
+    "graded": {
+      "dt_s": 0.005,
+      "n_columns": 1
+    },
+    "hybrid": {
+      "bridge_gain_hz": 100.0,
+      "dt_graded_s": 0.005,
+      "dt_lif_s": 0.0001,
+      "rate_amount": 200.0,
+      "rate_decay": 0.9801986733067553,
+      "steps_per_graded": 50
+    },
+    "lattice": {
+      "count": 2,
+      "n_columns": 3
+    },
+    "lif": {
+      "adaptation_decay": 0.9995001249791693,
+      "adaptation_mv": 0.0,
+      "decay_a": 0.9950124791926823,
+      "decay_b": 0.9801986733067553,
+      "decay_c": 0.004937935295309022,
+      "delay_steps": 18,
+      "dt_ms": 0.1,
+      "f_poi": 250.0,
+      "refractory_steps": 22,
+      "t_dly_ms": 1.8,
+      "t_mbr_ms": 20.0,
+      "t_rfc_ms": 2.2,
+      "tau_adaptation_ms": 200.0,
+      "tau_ms": 5.0,
+      "v0_mv": -52.0,
+      "v_rst_mv": -52.0,
+      "v_th_mv": -45.0,
+      "w_event_mv": 68.75,
+      "w_syn_mv": 0.275
+    },
+    "n_graded": 8,
+    "n_spiking": 3,
+    "run": {
+      "grey": 0.5,
+      "modulated_steps": 0,
+      "pre_steps": 40,
+      "seed": 6,
+      "steps": 100,
+      "t_pre_s": 0.2
+    },
+    "source": "lattice"
+  },
+  "schema": "flycns.scenario/1",
+  "sources": [],
+  "strings": {}
+}

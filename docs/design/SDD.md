@@ -41,7 +41,7 @@ neither runs in a browser. `flycns` does, once, with tests.
 | `flycns.mapped` | Python | E3's geometry: where flyvis's lattice columns look, and which MaleCNS neurons they stand for |
 | `flycns.dynamics` | Python (NumPy reference, PyTorch GPU) | LIF (Shiu), graded optic lobe (flyvis-style), the graded-to-spiking bridge, stabilisers, stimulation and silencing |
 | `flycns.record` | Python | spike and graded-activity recordings in the shared binary format |
-| `@fasl-work/flycns` | TypeScript + WGSL (+ WASM fallback) | loaders for the compiled format and recordings; the same dynamics on WebGPU; a worker-based fallback |
+| `@fasl-work/flycns` | TypeScript + WGSL | loaders for the compiled format, recordings and engine bundles; the same dynamics on the CPU (float64, the reference's order) and on WebGPU; a worker that runs the CPU engine off the main thread |
 | `parity/` | both | fixed-seed scenarios run by both implementations, compared by the tolerances in section 7 |
 
 ## 4. The compiled format (the contract between the two languages)
@@ -94,8 +94,9 @@ Everything a simulation needs is in the directory; a consumer never reads the re
 
 ## 6. Determinism
 
-Accumulation of synaptic input uses fixed-point integers in the browser kernels (no float atomics), and a fixed
-reduction order in the Python reference, so a run is a pure function of (graph, stimulus, seed, parameters) on the
+The browser kernels never add floats atomically: the LIF delivery is an int32 fixed-point sum, and the graded step
+and the couplings gather each target's connections in their original order; the Python reference uses a fixed
+reduction order, so a run is a pure function of (graph, stimulus, seed, parameters) on the
 CPU paths. GPU paths are compared by tolerance (section 7), never claimed bit-identical.
 
 ## 7. Parity policy
@@ -123,9 +124,9 @@ by spike.
 | Risk | Handling |
 |---|---|
 | Float nondeterminism on GPUs | fixed-point accumulation in the browser; tolerances stated; no bit-identity claims on GPU |
-| Memory: 25.6 M synapses in a browser | uint16 counts and int32 targets (about 150 MB raw), sharded; partition-first loading |
+| Memory: 25.6 M synapses in a browser | int32 targets and int32 fixed-point weights on the device (about 205 MB for MaleCNS), within the adapter's binding limits, which the device requests; a bundle may store float32 weights to halve its download |
 | flyvis parameter transfer covers only its 64 types | coverage reported per type; defaults documented |
-| Publishing needs account actions | PyPI trusted publisher registered 2026-09-26; flycns 0.6.0 published from release v0.06.000 the same day. The npm package is published with the browser engine, never as a version-only stub |
+| Publishing needs account actions | PyPI trusted publisher registered 2026-09-26; flycns 0.6.0 published from release v0.06.000 the same day. The npm package is published from 0.07.000, with the browser engine, never as a version-only stub |
 
 ## 9. Requirements in force at scaffolding
 

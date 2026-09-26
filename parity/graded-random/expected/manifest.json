@@ -1,0 +1,40 @@
+{
+  "arrays": [
+    {
+      "bytes": 12000,
+      "dtype": "float32",
+      "file": "activity.bin",
+      "name": "activity",
+      "sha256": "ae1afece5c6e09498426fe3da6598dcb7746fcd664eb6d31e7320b5a093e41d4",
+      "shape": [
+        60,
+        50
+      ]
+    },
+    {
+      "bytes": 400,
+      "dtype": "float64",
+      "file": "final_state.bin",
+      "name": "final_state",
+      "sha256": "e05473c4225cb24fe9228bd4435db78c8fc7e9829b9ce664a705512c2a106dc0",
+      "shape": [
+        50
+      ]
+    }
+  ],
+  "counts": {
+    "activity": [
+      60,
+      50
+    ],
+    "final_state": [
+      50
+    ]
+  },
+  "release": {
+    "scenario": "graded-random"
+  },
+  "schema": "flycns.expected/1",
+  "sources": [],
+  "strings": {}
+}

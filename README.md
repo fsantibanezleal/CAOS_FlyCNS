@@ -24,14 +24,16 @@ known to fall short.
 
 ## Status
 
-Version 0.06.001: the MaleCNS v1.0 compiler and compiled format; the two compound eyes over the release's own
+Version 0.07.000: the MaleCNS v1.0 compiler and compiled format; the two compound eyes over the release's own
 columns, their vertical set by the dorsal rim; the published spiking model, identical to a literal Brian2
 transcription, on a NumPy reference and a GPU engine; the graded visual neurons as flyvis computes them, held to
 flyvis itself, with its 50 trained networks shipped as data; and flyvis's numbers transferred onto the neuron-level
 wiring of both MaleCNS optic lobes, where T4 cells, measured through the modelled eyes, prefer their known
 directions; and the whole CNS coupled, in four engines (the published model everywhere, which does not see; the
 graded optic lobes with the spiking CNS, which carries a flash to the motor neurons; flyvis's own networks mapped
-onto MaleCNS; and the stabilised version, which leaves the published model one state). Next: the browser engine.
+onto MaleCNS; and the stabilised version, which leaves the published model one state); and the browser engine
+(`@fasl-work/flycns`): a CPU engine that reproduces the Python reference spike for spike, the whole CNS included,
+and WebGPU kernels held to it by the design's tolerances. Next: Destello's scenes, cases and web product.
 This README lists capabilities only as they land.
 
 ## Compile MaleCNS v1.0
@@ -74,11 +76,12 @@ parameters from `flycns.flyvis.load_ensemble()`; see [`docs/models/03_graded.md`
 
 ```bash
 pip install flycns              # Python 3.11+; flycns[gpu] adds PyTorch, flycns[release] reads release files
+npm install @fasl-work/flycns   # the browser engine: loaders, the CPU engines, WebGPU, the worker
 ```
 
-The Python package is on PyPI as [`flycns`](https://pypi.org/project/flycns/), published from this repository's
-releases through trusted publishing. The browser engine, `@fasl-work/flycns` on npm, is not published: it is the
-next unit, and until it lands the TypeScript package exports only its version.
+Both are published from this repository's releases: [`flycns`](https://pypi.org/project/flycns/) on PyPI through
+trusted publishing, and [`@fasl-work/flycns`](https://www.npmjs.com/package/@fasl-work/flycns) on npm. The browser
+engine and its measurements are in [`docs/models/06_browser.md`](docs/models/06_browser.md).
 
 ## Install (development)
 

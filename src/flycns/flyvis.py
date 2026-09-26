@@ -80,7 +80,8 @@ def lattice_network(lattice: Compiled, ensemble: FlyvisEnsemble, model: int) -> 
     source, target = lattice["edge_source"].astype(np.int64), lattice["edge_target"].astype(np.int64)
     pair = lattice["edge_pair"].astype(np.int64)
     width = 64
-    key_of_group = (ensemble.group_pair * width + (ensemble.group_du + width // 2)) * width         + (ensemble.group_dv + width // 2)
+    key_of_group = ((ensemble.group_pair * width + (ensemble.group_du + width // 2)) * width
+                    + (ensemble.group_dv + width // 2))
     order = np.argsort(key_of_group)
     key = (pair * width + (u[target] - u[source] + width // 2)) * width + (v[target] - v[source] + width // 2)
     group = order[np.searchsorted(key_of_group[order], key)]

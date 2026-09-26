@@ -1,0 +1,66 @@
+{
+  "arrays": [
+    {
+      "bytes": 392,
+      "dtype": "int32",
+      "file": "neuron_index.bin",
+      "name": "neuron_index",
+      "sha256": "841dd1bae048483618bb82dff764758120e3f8c6cd81aaef36a634bca30a4c0d",
+      "shape": [
+        98
+      ]
+    },
+    {
+      "bytes": 16008,
+      "dtype": "int64",
+      "file": "tick_indptr.bin",
+      "name": "tick_indptr",
+      "sha256": "3dcafa96476656e828469ab2519d79f4b6f7a102fa479d175643002f5cb4aa96",
+      "shape": [
+        2001
+      ]
+    },
+    {
+      "bytes": 12,
+      "dtype": "int32",
+      "file": "trace_neurons.bin",
+      "name": "trace_neurons",
+      "sha256": "49c13fbf588855d3ad4837dc43cdea1a89419ad2a56f3a64ffa5ee779c5f88a3",
+      "shape": [
+        3
+      ]
+    },
+    {
+      "bytes": 24000,
+      "dtype": "float32",
+      "file": "traces_mv.bin",
+      "name": "traces_mv",
+      "sha256": "455bec73130c8b34173d148b07b9f32f70a9a738fd732ed9cce7e6bbeffe3e18",
+      "shape": [
+        2000,
+        3
+      ]
+    }
+  ],
+  "counts": {
+    "neuron_index": [
+      98
+    ],
+    "tick_indptr": [
+      2001
+    ],
+    "trace_neurons": [
+      3
+    ],
+    "traces_mv": [
+      2000,
+      3
+    ]
+  },
+  "release": {
+    "scenario": "lif-circuit-0"
+  },
+  "schema": "flycns.expected/1",
+  "sources": [],
+  "strings": {}
+}

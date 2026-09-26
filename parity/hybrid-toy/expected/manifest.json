@@ -1,0 +1,107 @@
+{
+  "arrays": [
+    {
+      "bytes": 3200,
+      "dtype": "float32",
+      "file": "graded.bin",
+      "name": "graded",
+      "sha256": "dbaedc77afcdd2a1d10a2cf5798e8a6a5b785959187faddaaa6ce6f9c246dfff",
+      "shape": [
+        100,
+        8
+      ]
+    },
+    {
+      "bytes": 64,
+      "dtype": "int64",
+      "file": "graded_units.bin",
+      "name": "graded_units",
+      "sha256": "fece8d601cd4c9020e24f9e4a47feedefb2bceff5e9798d8056aea8700052eaa",
+      "shape": [
+        8
+      ]
+    },
+    {
+      "bytes": 32,
+      "dtype": "float32",
+      "file": "grey_release.bin",
+      "name": "grey_release",
+      "sha256": "448a790441a17db2030dac36243e766e18d4522fcdbde7adbf8ec1f52019f183",
+      "shape": [
+        8
+      ]
+    },
+    {
+      "bytes": 196,
+      "dtype": "int32",
+      "file": "neuron_index.bin",
+      "name": "neuron_index",
+      "sha256": "93e771635cf9a2d19f8f9d97b2d380b2ad769291d608d0d02947f56dc4299381",
+      "shape": [
+        49
+      ]
+    },
+    {
+      "bytes": 40008,
+      "dtype": "int64",
+      "file": "tick_indptr.bin",
+      "name": "tick_indptr",
+      "sha256": "6619e8f88f7417713abb0afa3e1055119998c6cacc9f303e74ced62cef5da687",
+      "shape": [
+        5001
+      ]
+    },
+    {
+      "bytes": 12,
+      "dtype": "int32",
+      "file": "trace_neurons.bin",
+      "name": "trace_neurons",
+      "sha256": "ad5dc1478de06a4c2728ea528bd9361a4b945e92a414bf4d180cedaaeaa5f4cc",
+      "shape": [
+        3
+      ]
+    },
+    {
+      "bytes": 60000,
+      "dtype": "float32",
+      "file": "traces_mv.bin",
+      "name": "traces_mv",
+      "sha256": "f0407f57f10b7c0d38b4437f4689dd9f0a22e9a3ffce75936a9f47299ac0aa74",
+      "shape": [
+        5000,
+        3
+      ]
+    }
+  ],
+  "counts": {
+    "graded": [
+      100,
+      8
+    ],
+    "graded_units": [
+      8
+    ],
+    "grey_release": [
+      8
+    ],
+    "neuron_index": [
+      49
+    ],
+    "tick_indptr": [
+      5001
+    ],
+    "trace_neurons": [
+      3
+    ],
+    "traces_mv": [
+      5000,
+      3
+    ]
+  },
+  "release": {
+    "scenario": "hybrid-toy"
+  },
+  "schema": "flycns.expected/1",
+  "sources": [],
+  "strings": {}
+}
