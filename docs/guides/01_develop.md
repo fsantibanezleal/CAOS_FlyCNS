@@ -54,6 +54,23 @@ npm run typecheck
 npm test
 ```
 
+The GPU tests need a WebGPU adapter. Node reaches one through Dawn, installed locally and never saved as a
+dependency (95 MB; CI has no GPU, so there the GPU tests are reported as skipped):
+
+```bash
+npm install --no-save webgpu
+npm test                        # the GPU parity tests now run instead of skipping
+```
+
+Before a release that touches the kernels, measure both browser engines on the whole CNS (about a minute for the
+reference's strong-drive runs, seconds for the browser engines):
+
+```bash
+.venv/Scripts/python scripts/write_whole_cns_scenario.py path/to/compiled/malecns-v1.0 path/to/whole-cns
+npm run build
+node scripts/measure_browser.mjs path/to/whole-cns path/to/browser-measure.json
+```
+
 ## Guards
 
 Standard library only, run before anything is installed (continuous integration runs them first):

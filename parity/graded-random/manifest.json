@@ -1,0 +1,175 @@
+{
+  "arrays": [
+    {
+      "bytes": 0,
+      "dtype": "int64",
+      "file": "drive_activate_neuron.bin",
+      "name": "drive_activate_neuron",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    },
+    {
+      "bytes": 0,
+      "dtype": "float64",
+      "file": "drive_activate_rate_hz.bin",
+      "name": "drive_activate_rate_hz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    },
+    {
+      "bytes": 0,
+      "dtype": "float64",
+      "file": "drive_event_dv_mv.bin",
+      "name": "drive_event_dv_mv",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    },
+    {
+      "bytes": 0,
+      "dtype": "int64",
+      "file": "drive_event_neuron.bin",
+      "name": "drive_event_neuron",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    },
+    {
+      "bytes": 0,
+      "dtype": "int64",
+      "file": "drive_event_step.bin",
+      "name": "drive_event_step",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    },
+    {
+      "bytes": 0,
+      "dtype": "int64",
+      "file": "drive_silenced.bin",
+      "name": "drive_silenced",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    },
+    {
+      "bytes": 400,
+      "dtype": "float64",
+      "file": "graded_bias.bin",
+      "name": "graded_bias",
+      "sha256": "fa0b6c238d6f08d5c3f7675f425473c7f578819e791a8e847cdff221b0306439",
+      "shape": [
+        50
+      ]
+    },
+    {
+      "bytes": 40,
+      "dtype": "int32",
+      "file": "graded_input_column.bin",
+      "name": "graded_input_column",
+      "sha256": "3010e24cc164d74ac8e8d6f57a67de5cc77479f5ce4fe5f4b5c37554444720fe",
+      "shape": [
+        10
+      ]
+    },
+    {
+      "bytes": 40,
+      "dtype": "int32",
+      "file": "graded_input_neuron.bin",
+      "name": "graded_input_neuron",
+      "sha256": "10b4796eac59c7d81c33711f219ba227247a4e338adad078159ba01e87590841",
+      "shape": [
+        10
+      ]
+    },
+    {
+      "bytes": 1200,
+      "dtype": "int32",
+      "file": "graded_source.bin",
+      "name": "graded_source",
+      "sha256": "b7e7fe3442851233ab90fe23edaaae0e9e8f7b574a97c357a7a93857b9d78f2c",
+      "shape": [
+        300
+      ]
+    },
+    {
+      "bytes": 1200,
+      "dtype": "int32",
+      "file": "graded_target.bin",
+      "name": "graded_target",
+      "sha256": "09885d95e440bcb2ec501228a8f1536580993af4be718b559f2ca877a307a122",
+      "shape": [
+        300
+      ]
+    },
+    {
+      "bytes": 400,
+      "dtype": "float64",
+      "file": "graded_time_const_s.bin",
+      "name": "graded_time_const_s",
+      "sha256": "021e9a89b3a8bd026634c028d6958d83f93db99d60e426c5da281c51dcb44250",
+      "shape": [
+        50
+      ]
+    },
+    {
+      "bytes": 2400,
+      "dtype": "float64",
+      "file": "graded_weight.bin",
+      "name": "graded_weight",
+      "sha256": "b1f77ed0570028bfa74f2aa9bd5e894a72fa4ce86a90cb995f2b7ce90910cab2",
+      "shape": [
+        300
+      ]
+    },
+    {
+      "bytes": 2400,
+      "dtype": "float64",
+      "file": "stimulus_intensity.bin",
+      "name": "stimulus_intensity",
+      "sha256": "cd9741882e5fa195b5c5a17240ea586252d50fe4fe24129c3b9e339a8f9eb863",
+      "shape": [
+        60,
+        5
+      ]
+    },
+    {
+      "bytes": 0,
+      "dtype": "int64",
+      "file": "trace_neurons.bin",
+      "name": "trace_neurons",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    }
+  ],
+  "counts": {},
+  "release": {
+    "engine": "graded",
+    "graded": {
+      "dt_s": 0.005,
+      "n_columns": 5
+    },
+    "n_neurons": 50,
+    "run": {
+      "grey": 0.5,
+      "modulated_steps": 0,
+      "pre_steps": 200,
+      "seed": 0,
+      "steps": 60,
+      "t_pre_s": 1.0
+    }
+  },
+  "schema": "flycns.scenario/1",
+  "sources": [],
+  "strings": {}
+}
