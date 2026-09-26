@@ -23,7 +23,10 @@ export interface Run {
 
 export function spikeCounts(run: Run): Int32Array {
   const counts = new Int32Array(run.nNeurons);
-  for (let i = 0; i < run.neuronIndex.length; i++) counts[run.neuronIndex[i] as number]++;
+  for (let i = 0; i < run.neuronIndex.length; i++) {
+    const neuron = run.neuronIndex[i] as number;
+    counts[neuron] = (counts[neuron] as number) + 1;
+  }
   return counts;
 }
 

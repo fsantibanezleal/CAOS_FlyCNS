@@ -3,6 +3,41 @@
 All notable changes are recorded here, newest first, grouped Added / Changed / Fixed / Removed. Versions are
 `X.XX.XXX` (the `VERSION` file, the tags and this log); the manifests carry the semantic form (`0.0.0`).
 
+## [0.07.000] - 2026-09-26
+
+### Added
+
+- The browser engine, `@fasl-work/flycns` on npm, first published at this version. Engine bundles and scenarios
+  (`flycns.bundle`, schemas `flycns.engine/1` and `flycns.scenario/1`) carry every constant of a step as a JSON number,
+  so the TypeScript engine never recomputes what the reference computed; eight parity scenarios and 10,005 hash keys
+  under `parity/`, written by the reference (`scripts/make_parity_fixtures.py`) and checked current by a test.
+- The CPU engines in TypeScript (`LIFEngine`, `GradedEngine`, `HybridEngine` with the lobe's own source and with
+  flyvis's lattices), float64, the reference's operations in its order: identical to the reference on every fixture
+  and, on the whole MaleCNS under the moderate drive, spike for spike (18,063 spikes in 1.5 s for 200 ms). The loaders
+  check every array against its manifest's SHA-256, dtype and shape. The worker protocol runs them off the main
+  thread, exported as `@fasl-work/flycns/worker`.
+- The WebGPU engines (`LIFGpu`, `GradedGpu`, `HybridGpu`): one LIF step as seven WGSL kernels in one compute pass
+  with the delivery summed in int32 fixed point (`fixedPointScale`: the largest power of two keeping every neuron's
+  possible input within 2^30), the graded step and the couplings as gathers in each target's connection order, a step
+  counter on the device so a batch is one command buffer. Identical spikes on every fixture, graded activity within
+  3.6e-7; on the whole CNS the same neurons the same number of times (Jaccard 1.0, count correlation 1.0, 0.4 s for
+  200 ms on a laptop RTX 4070); under the strong drive five runs correlate with the reference at 0.9836 against its own
+  5th percentile of 0.8908.
+- The hash in WGSL (`HASH_WGSL`, `hashGpu`), equal to the reference on the pinned vectors and the committed keys.
+- `scripts/write_whole_cns_scenario.py` and `scripts/measure_browser.mjs`: the whole-CNS measurement of both browser
+  engines. Wiki: the browser engine (`docs/models/06_browser.md`) with its figure.
+
+### Changed
+
+- The design of the browser engine records what building it changed: the graded step and the couplings gather
+  instead of pushing into fixed point, which would need a bound graded activity does not have. The SDD's module table,
+  determinism section and memory risk now describe what is built.
+
+### Fixed
+
+- Three type errors the TypeScript 7 compiler reports in the loaders and the graded engine (typed-array buffer
+  generics and unchecked indexed increments).
+
 ## [0.06.001] - 2026-09-26
 
 ### Changed

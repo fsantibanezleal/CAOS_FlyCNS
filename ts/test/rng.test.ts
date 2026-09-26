@@ -2,7 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { eventThreshold, hash3 } from "../src/rng.js";
 import { readCompiled } from "../src/compiled.js";
-import { fsSource, parityDir } from "./files.js";
+import { hashGpu } from "../src/gpu/hash-gpu.js";
+import { NO_GPU, fsSource, gpuDevice, parityDir } from "./files.js";
 
 // (seed, neuron, step) -> hash, pinned in tests/test_lif.py and checked there against the mmh3 package
 const VECTORS: [[number, number, number], number][] = [
@@ -28,4 +29,29 @@ test("the hash matches the pinned vectors and the reference on the committed key
   const threshold = vectors.numbers("threshold");
   const rate = vectors.float64("rate_hz");
   for (let i = 0; i < rate.length; i++) assert.equal(eventThreshold(rate[i] as number, 0.1 / 1000.0), threshold[i]);
+});
+
+test("the hash matches the pinned vectors and the reference in wgsl", async (t) => {
+  const device = await gpuDevice();
+  if (!device) {
+    t.skip(NO_GPU);
+    return;
+  }
+  const pinned = await hashGpu(
+    device,
+    VECTORS.map(([[s]]) => s),
+    VECTORS.map(([[, n]]) => n),
+    VECTORS.map(([[, , k]]) => k),
+  );
+  VECTORS.forEach(([, expected], i) => assert.equal(pinned[i], expected, `pinned vector ${i}`));
+  const vectors = await readCompiled(fsSource(parityDir("hash-vectors")), { schema: "flycns.vectors/1" });
+  const hash = vectors.get("hash") as Uint32Array;
+  const out = await hashGpu(
+    device,
+    vectors.get("seed") as Uint32Array,
+    vectors.get("neuron") as Uint32Array,
+    vectors.get("step") as Uint32Array,
+  );
+  assert.equal(out.length, hash.length);
+  for (let i = 0; i < hash.length; i++) assert.equal(out[i], hash[i], `key ${i}`);
 });

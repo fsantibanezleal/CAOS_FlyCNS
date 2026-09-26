@@ -19,7 +19,7 @@ test("the loader checks every array against its manifest", async () => {
   // a flipped byte in one array
   const tampered = async (name: string) => {
     const bytes = new Uint8Array(await source(name));
-    if (name === "lif_indices.bin") bytes[0] ^= 1;
+    if (name === "lif_indices.bin") bytes[0] = (bytes[0] as number) ^ 1;
     return bytes;
   };
   await assert.rejects(readCompiled(tampered, { schema: SCENARIO_SCHEMA }), (error: Error) => {

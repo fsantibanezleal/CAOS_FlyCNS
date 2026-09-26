@@ -77,21 +77,30 @@ five dispatches in one compute pass (each dispatch sees the previous one's write
 5. **reset and record**: resets, adaptation, the filtered rate, the spike appended to the batch's list, the traced
    voltages written.
 
-A batch of steps (one graded frame, 50 steps) is one command buffer; the spike list and traces are read back once per
-batch and sorted by (step, neuron) on the CPU. The graded step is two dispatches (per-connection accumulation of
-`weight x max(V, 0)` into fixed point, then the per-neuron update); the bridge and the feedback are one per-connection
-accumulation each plus a per-neuron conversion. GPU results are compared by tolerance (SDD section 7), never claimed
-bit-identical to the reference, though the fixed-point sums make each kernel deterministic given its inputs.
+A step counter on the device (advanced by a one-invocation *tick* kernel) replaces a uniform per step, so a batch of
+steps (500 by default, or 20 graded frames of the hybrid) is one command buffer; the spike list and traces are read
+back once per batch and sorted by (step, neuron) on the CPU.
+
+**Changed while building (2026-09-26): the graded step and the couplings gather.** The first design pushed
+`weight x max(V, 0)` into fixed point per connection. A fixed-point grid needs a bound on the largest sum, which the
+LIF has (every presynaptic neuron firing at once) and graded activity does not. So each graded neuron sums its own
+incoming connections over a CSR by target, built on the CPU with each target's connections in their original order,
+which is the order the CPU engine sums them in: no atomics, no bound, and deterministic given its inputs. The bridge,
+the feedback and E3's map onto the lobe's units are one gather kernel with a mode (times the LIF step, over the
+bridge gain, or accumulating side after side). GPU results are compared by tolerance (SDD section 7), never claimed
+bit-identical to the reference.
 
 Node runs the same kernels through Dawn (`webgpu` on npm, installed only locally with `--no-save`; it is 95 MB and
-CI has no GPU), so the GPU parity tests run on the developer's machine before a release and are listed as not run in
-CI, never as passed.
+CI has no GPU), so the GPU parity tests run on the developer's machine before a release and are reported as skipped
+in CI, never as passed. The Dawn instance must stay referenced for the life of the process: collected, it tears the
+device down and the process crashes (the first GPU test run died this way, with no message).
 
 ## Memory on the whole CNS
 
-The LIF part of MaleCNS: 166,700 neurons and 25.6 M connections. Targets as int32 (102 MB) and weights as float32
-(102 MB) fit a browser but not comfortably; a large bundle therefore carries `lif_weight_mv` as float32 and the page
-loads it partition-first. The optic-lobe part: 96 k units, 9.07 M connections, float32 weights (36 MB). The measured
+The LIF part of MaleCNS: 166,700 neurons and 25.6 M connections. On the device, targets as int32 (102 MB) and
+fixed-point weights as int32 (102 MB), each a single binding under the adapter's limit, which `requestDevice` asks
+for (the default is 128 MiB); the delay ring adds 19 slots of one word per neuron (12.7 MB). A large bundle may carry
+`lif_weight_mv` as float32 to halve its download; the exact whole-CNS bundle used for the measurements is 295 MB. The optic-lobe part: 96 k units, 9.07 M connections, float32 weights (36 MB). The measured
 payload decides Destello's deploy (its plan, U9); it is not decided here.
 
 ## Parity tolerances (from the SDD, section 7)
@@ -103,3 +112,12 @@ payload decides Destello's deploy (its plan, U9); it is not decided here.
 | reference vs TypeScript CPU, hybrid | identical spikes and graded activity | the toy CNS of the hybrid tests, own source and lattice source |
 | reference vs WebGPU, LIF and hybrid, small | identical spikes; graded activity within 1e-4 | the same fixtures |
 | reference vs WebGPU, whole CNS | active-neuron Jaccard and count correlation at least 0.98 over 200 ms of the moderate drive | measured with the compiled MaleCNS, before a release that touches the kernels; recorded in `docs/models/06_browser.md` |
+
+## Measured (2026-09-26, laptop RTX 4070 through Dawn)
+
+Every row above holds. The CPU engine reproduces every fixture and the whole CNS under the moderate drive spike for
+spike (18,063 spikes). The WebGPU engine gives identical spikes on every fixture (traces within 6.6e-4 mV, graded
+activity within 3.6e-7) and, on the whole CNS, the same neurons the same number of times (Jaccard 1.0, count
+correlation 1.0), its spike order parting at step 1,112 as the PyTorch engine's does; under the strong drive five
+WebGPU runs correlate with five reference runs at 0.9836, above the reference's own 5th percentile of 0.8908. The
+numbers, the scripts and the limits are in `docs/models/06_browser.md`.

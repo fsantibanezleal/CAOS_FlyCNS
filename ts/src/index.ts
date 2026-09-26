@@ -4,7 +4,7 @@
  * The display version (X.XX.XXX) lives in the repository's VERSION file; this constant is its semantic form and
  * must equal the npm manifest's version (a test checks it).
  */
-export const VERSION = "0.6.1";
+export const VERSION = "0.7.0";
 
 export { hash3, fmix32, eventThreshold, poissonEvent } from "./rng.js";
 export {
@@ -42,7 +42,10 @@ export {
 export type { BundleRelease, Scenario, ScenarioRun } from "./bundle.js";
 export { createWorkerHandler } from "./worker.js";
 export type { WorkerRequest, WorkerResponse, Files } from "./worker.js";
-export { HASH_WGSL, LIF_WGSL, GRADED_WGSL, COUPLING_WGSL } from "./gpu/shaders.js";
-export { LIFGpu } from "./gpu/lif-gpu.js";
+export { HASH_WGSL, HASH_KERNEL_WGSL, LIF_WGSL, GRADED_WGSL, COUPLING_WGSL } from "./gpu/shaders.js";
+export { LIFGpu, LIFGpuRun, assembleRun } from "./gpu/lif-gpu.js";
+export type { LIFGpuOptions } from "./gpu/lif-gpu.js";
+export { GradedGpu } from "./gpu/graded-gpu.js";
 export { HybridGpu } from "./gpu/hybrid-gpu.js";
-export { fixedPointScale, requestDevice } from "./gpu/device.js";
+export { hashGpu } from "./gpu/hash-gpu.js";
+export { fixedPointScale, quantise, requestDevice } from "./gpu/device.js";

@@ -67,7 +67,7 @@ export class GradedEngine {
    * reference takes `int(t_pre_s / dt)` steps; a bundle's scenario carries that count as `pre_steps`.
    */
   steadyState(preSteps: number, grey = 0.5, initial?: Float64Array): Float64Array {
-    let v = initial ? Float64Array.from(initial) : Float64Array.from(this.net.bias);
+    let v: Float64Array = initial ? Float64Array.from(initial) : Float64Array.from(this.net.bias);
     const current = this.columnCurrent(new Float64Array(this.net.nColumns).fill(grey));
     for (let k = 0; k < preSteps; k++) v = this.step(v, current);
     return v;
@@ -83,7 +83,7 @@ export class GradedEngine {
     initial?: Float64Array,
     record?: Int32Array,
   ): { final: Float64Array; activity: Float32Array } {
-    let v = initial ? Float64Array.from(initial) : Float64Array.from(this.net.bias);
+    let v: Float64Array = initial ? Float64Array.from(initial) : Float64Array.from(this.net.bias);
     const rec = record ?? Int32Array.from({ length: this.n }, (_, i) => i);
     const activity = new Float32Array(frames * rec.length);
     const current = new Float64Array(this.n);
