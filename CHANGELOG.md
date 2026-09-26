@@ -3,6 +3,14 @@
 All notable changes are recorded here, newest first, grouped Added / Changed / Fixed / Removed. Versions are
 `X.XX.XXX` (the `VERSION` file, the tags and this log); the manifests carry the semantic form (`0.0.0`).
 
+## [0.06.001] - 2026-09-26
+
+### Changed
+
+- Published: flycns 0.6.0 is on PyPI (release v0.06.000, trusted publishing, verified with `pip install flycns==0.6.0`
+  in a clean environment). The README gains an Install section; the design document's publishing risk records the
+  fact. The npm package stays unpublished until the browser engine exists, rather than shipping a version constant.
+
 ## [0.06.000] - 2026-09-24
 
 ### Added

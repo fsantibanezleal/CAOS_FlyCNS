@@ -24,7 +24,7 @@ known to fall short.
 
 ## Status
 
-Version 0.06.000: the MaleCNS v1.0 compiler and compiled format; the two compound eyes over the release's own
+Version 0.06.001: the MaleCNS v1.0 compiler and compiled format; the two compound eyes over the release's own
 columns, their vertical set by the dorsal rim; the published spiking model, identical to a literal Brian2
 transcription, on a NumPy reference and a GPU engine; the graded visual neurons as flyvis computes them, held to
 flyvis itself, with its 50 trained networks shipped as data; and flyvis's numbers transferred onto the neuron-level
@@ -69,6 +69,16 @@ print(run.spike_counts().sum(), "spikes")
 
 The graded visual neurons run through `flycns.dynamics.GradedReference` (or `GradedTorch`), with the trained flyvis
 parameters from `flycns.flyvis.load_ensemble()`; see [`docs/models/03_graded.md`](docs/models/03_graded.md).
+
+## Install
+
+```bash
+pip install flycns              # Python 3.11+; flycns[gpu] adds PyTorch, flycns[release] reads release files
+```
+
+The Python package is on PyPI as [`flycns`](https://pypi.org/project/flycns/), published from this repository's
+releases through trusted publishing. The browser engine, `@fasl-work/flycns` on npm, is not published: it is the
+next unit, and until it lands the TypeScript package exports only its version.
 
 ## Install (development)
 
